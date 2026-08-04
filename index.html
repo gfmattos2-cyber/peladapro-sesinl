@@ -22,26 +22,34 @@
                 <h1>PELADA<span>PRO</span></h1>
             </div>
             <nav class="app-nav">
-                <button class="nav-btn active" data-tab="jogadores">
+                <button class="nav-btn active" data-tab="cartas">
+                    <i class="fa-solid fa-address-card"></i> <span>Cards</span>
+                </button>
+                <button class="nav-btn" data-tab="jogadores">
                     <i class="fa-solid fa-users"></i> <span>Jogadores</span>
                 </button>
                 <button class="nav-btn" data-tab="sorteio">
                     <i class="fa-solid fa-arrows-spin"></i> <span>Sorteador</span>
                 </button>
-                <button class="nav-btn" data-tab="financeiro">
-                    <i class="fa-solid fa-wallet"></i> <span>Financeiro</span>
-                </button>
                 <button class="nav-btn" data-tab="estatisticas">
-                    <i class="fa-solid fa-chart-simple"></i> <span>Estatísticas</span>
+                    <i class="fa-solid fa-chart-simple"></i> <span>Time da Semana</span>
                 </button>
             </nav>
+            <div class="admin-header-controls" style="margin-left: auto; display: flex; align-items: center; gap: 0.5rem;">
+                <button id="btn-admin-login" class="btn btn-outline btn-sm" style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.85rem; padding: 0.4rem 0.8rem; border-radius: 6px; border-color: rgba(255,255,255,0.15); background-color: rgba(255,255,255,0.03);">
+                    <i class="fa-solid fa-lock"></i> Login Admin
+                </button>
+                <button id="btn-admin-logout" class="btn btn-outline btn-sm d-none" style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.85rem; padding: 0.4rem 0.8rem; border-radius: 6px; color: var(--danger); border-color: rgba(239, 68, 68, 0.4); background-color: rgba(239, 68, 68, 0.03);">
+                    <i class="fa-solid fa-lock-open"></i> Sair Admin
+                </button>
+            </div>
         </header>
 
         <!-- Main Content Area -->
         <main class="app-main">
             
             <!-- TAB: JOGADORES -->
-            <section id="tab-jogadores" class="tab-content active">
+            <section id="tab-jogadores" class="tab-content">
                 <div class="view-header">
                     <h2>Gerenciamento de Jogadores</h2>
                     <p>Cadastre os atletas da sua pelada, defina suas notas e confirme quem vai jogar hoje.</p>
@@ -51,7 +59,7 @@
                     <!-- Form e Resumo -->
                     <div class="sidebar-column">
                         <!-- Formulário de Adicionar Jogador -->
-                        <div class="card glass">
+                        <div class="card glass" id="card-novo-jogador">
                             <h3><i class="fa-solid fa-user-plus"></i> Novo Jogador</h3>
                             <form id="player-form" class="player-form">
                                 <div class="form-group">
@@ -148,7 +156,7 @@
                                             <th style="width: 140px;">Posição</th>
                                             <th style="width: 110px;">Tipo</th>
                                             <th style="width: 150px;">Nota (1 a 5)</th>
-                                            <th style="width: 100px; text-align: center;">Ações</th>
+                                            <th id="player-actions-header" style="width: 100px; text-align: center;" class="d-none">Ações</th>
                                         </tr>
                                     </thead>
                                     <tbody id="player-table-body">
@@ -168,7 +176,7 @@
                     <p>Configure a divisão da sua pelada. O sistema balanceará as equipes de forma igualitária com base no nível técnico e posições.</p>
                 </div>
 
-                <div class="card glass config-card">
+                <div class="card glass config-card" id="card-config-sorteio">
                     <h3><i class="fa-solid fa-sliders"></i> Configurações do Sorteio</h3>
                     <div class="config-grid">
                         <!-- Coluna 1: Critérios (Quantidade de Times e Jogadores por Time empilhados) -->
@@ -222,81 +230,15 @@
                 </div>
             </section>
 
-            <!-- TAB: FINANCEIRO -->
-            <section id="tab-financeiro" class="tab-content">
+            <!-- TAB: CARTAS -->
+            <section id="tab-cartas" class="tab-content active">
                 <div class="view-header">
-                    <h2>Controle Financeiro</h2>
-                    <p>Gerencie o custo do aluguel da quadra e saiba exatamente quem já pagou a taxa do dia.</p>
+                    <h2>Galeria de Cards</h2>
+                    <p>Confira os cards personalizados e notas estilo FIFA FUT de todos os jogadores da pelada.</p>
                 </div>
-
-                <div class="grid-layout">
-                    <div class="sidebar-column">
-                        <div class="card glass">
-                            <h3><i class="fa-solid fa-coins"></i> Configuração de Custos</h3>
-                            <div class="form-group">
-                                <label for="finance-court-cost">Custo Total da Quadra (R$)</label>
-                                <input type="number" id="finance-court-cost" min="0" value="150" step="5">
-                            </div>
-                            <div class="form-group">
-                                <label for="finance-pix-key">Chave PIX para Cobrança</label>
-                                <input type="text" id="finance-pix-key" placeholder="Celular, CPF, E-mail ou Aleatória">
-                            </div>
-                            <div class="form-group">
-                                <label for="finance-pix-owner">Nome do Titular do PIX</label>
-                                <input type="text" id="finance-pix-owner" placeholder="Ex: João Silva">
-                            </div>
-                            <button id="btn-save-finance-configs" class="btn btn-primary btn-block">
-                                <i class="fa-solid fa-floppy-disk"></i> Salvar Configurações
-                            </button>
-                        </div>
-
-                        <!-- Painel de Indicadores -->
-                        <div class="card glass summary-card">
-                            <h3><i class="fa-solid fa-receipt"></i> Resumo de Caixa</h3>
-                            <div class="finance-stats">
-                                <div class="finance-row">
-                                    <span>Valor por Jogador:</span>
-                                    <strong id="fin-value-per-player">R$ 0,00</strong>
-                                </div>
-                                <div class="finance-row">
-                                    <span>Total Arrecadado:</span>
-                                    <strong class="text-success" id="fin-collected">R$ 0,00</strong>
-                                </div>
-                                <div class="finance-row">
-                                    <span>Total Pendente:</span>
-                                    <strong class="text-warning" id="fin-pending">R$ 0,00</strong>
-                                </div>
-                                <div class="finance-row total-row">
-                                    <span>Balanço Geral:</span>
-                                    <strong id="fin-balance">R$ 0,00</strong>
-                                </div>
-                            </div>
-                            <button id="btn-copy-billing" class="btn btn-outline btn-block mt-3">
-                                <i class="fa-brands fa-whatsapp"></i> Copiar Mensagem de Cobrança
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="main-column">
-                        <div class="card glass list-card">
-                            <h3><i class="fa-solid fa-users-dollar"></i> Lista de Cobrança (Atletas Ativos Hoje)</h3>
-                            <div class="table-container mt-3">
-                                <table class="finance-table">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 120px; text-align: center;">Status</th>
-                                            <th>Nome do Jogador</th>
-                                            <th style="width: 130px;">Tipo</th>
-                                            <th style="width: 150px; text-align: right;">Valor Individual</th>
-                                            <th style="width: 100px; text-align: center;">Ações</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="finance-table-body">
-                                        <!-- Preenchido dinamicamente via JS -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                <div class="card glass" style="padding: 2rem;">
+                    <div id="gallery-grid" class="cards-grid">
+                        <!-- Cards carregados via Javascript -->
                     </div>
                 </div>
             </section>

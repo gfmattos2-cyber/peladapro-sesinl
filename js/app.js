@@ -513,13 +513,18 @@ function initSorteadorTab() {
     // Botão de Limpar Sorteio
     const btnClearDraw = document.getElementById('btn-clear-draw');
     if (btnClearDraw) {
-        btnClearDraw.addEventListener('click', () => {
+        btnClearDraw.addEventListener('click', async () => {
             if (confirm("Deseja mesmo limpar o sorteio atual de times?")) {
                 state.drawnTeams = [];
                 state.currentDrawSaved = false;
                 saveCurrentDrawSavedToStorage();
                 saveTeamsToStorage();
                 renderDrawnTeams();
+                
+                // Se for admin, remove os times da nuvem também
+                if (state.isAdmin) {
+                    await saveTeamsToCloud();
+                }
             }
         });
     }
@@ -980,27 +985,171 @@ function copyBillingMessage() {
 // ==========================================================================
 // ABA: RANKING - TIME DA SEMANA
 // ==========================================================================
+// ==========================================================================
+// ABA: RANKING - TIME DA SEMANA
+// ==========================================================================
+const BUCKET_URL = 'https://kvdb.io/peladapro_9fc2bfc2/wins';
+const TEAMS_BUCKET_URL = 'https://kvdb.io/peladapro_9fc2bfc2/current_teams';
+
+async function loadTeamsFromCloud() {
+    try {
+        const res = await fetch(TEAMS_BUCKET_URL);
+        if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data)) {
+                state.drawnTeams = data;
+                saveTeamsToStorage();
+                
+                const resultsContainer = document.getElementById('draw-results-container');
+                if (resultsContainer) {
+                    if (state.drawnTeams.length > 0) {
+                        resultsContainer.classList.remove('d-none');
+                    } else {
+                        resultsContainer.classList.add('d-none');
+                    }
+                }
+                renderDrawnTeams();
+                updateDrawSummary();
+            }
+        }
+    } catch (e) {
+        console.warn("[Pelada PRO] Não foi possível carregar os times da nuvem:", e);
+    }
+}
+
+async function saveTeamsToCloud() {
+    try {
+        await fetch(TEAMS_BUCKET_URL, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(state.drawnTeams || [])
+        });
+    } catch (e) {
+        console.error("[Pelada PRO] Erro ao salvar os times na nuvem:", e);
+    }
+}
+
+async function loadTotwFromCloud() {
+    try {
+        const res = await fetch(BUCKET_URL);
+        if (res.ok) {
+            const data = await res.json();
+            if (data && typeof data === 'object') {
+                state.players.forEach(p => {
+                    if (data[p.id] !== undefined) {
+                        p.totwWins = data[p.id];
+                    } else {
+                        p.totwWins = p.totwWins || 0;
+                    }
+                });
+                savePlayersToStorage();
+                renderTotwTable();
+                renderTotwPodium();
+            }
+        } else if (res.status === 404) {
+            // Se o bucket ainda não existe, cria-o enviando os dados locais
+            await saveTotwToCloud();
+        }
+    } catch (e) {
+        console.warn("[Pelada PRO] Não foi possível sincronizar com a nuvem, usando dados locais:", e);
+    }
+}
+
+async function saveTotwToCloud() {
+    try {
+        const data = {};
+        state.players.forEach(p => {
+            data[p.id] = p.totwWins || 0;
+        });
+        await fetch(BUCKET_URL, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+    } catch (e) {
+        console.error("[Pelada PRO] Erro ao salvar na nuvem:", e);
+    }
+}
+
 function initStatsTab() {
     const btnResetTotw = document.getElementById('btn-reset-totw');
+    const btnLogin = document.getElementById('btn-admin-login');
+    const btnLogout = document.getElementById('btn-admin-logout');
+
     if (btnResetTotw) {
-        btnResetTotw.addEventListener('click', () => {
+        btnResetTotw.addEventListener('click', async () => {
             if (confirm("Tem certeza que deseja ZERAR o ranking do Time da Semana de todos os jogadores? Esta ação não pode ser desfeita.")) {
                 state.players.forEach(p => {
                     p.totwWins = 0;
                 });
                 savePlayersToStorage();
+                await saveTotwToCloud();
                 renderTotwTable();
                 renderTotwPodium();
-                alert("Ranking redefinido com sucesso!");
+                alert("Ranking redefinido com sucesso na nuvem!");
             }
         });
     }
+
+    if (btnLogin && btnLogout) {
+        // Checar estado inicial do admin
+        const cachedAdmin = localStorage.getItem('pelada_is_admin') === 'true';
+        if (cachedAdmin) {
+            state.isAdmin = true;
+            btnLogin.classList.add('d-none');
+            btnLogout.classList.remove('d-none');
+            if (btnResetTotw) btnResetTotw.classList.remove('d-none');
+        } else {
+            state.isAdmin = false;
+            btnLogin.classList.remove('d-none');
+            btnLogout.classList.add('d-none');
+            if (btnResetTotw) btnResetTotw.classList.add('d-none');
+        }
+
+        btnLogin.addEventListener('click', () => {
+            const password = prompt("Digite a senha do administrador para liberar a edição do ranking:");
+            if (password === 'sesinl') { // Senha padrão solicitada
+                state.isAdmin = true;
+                localStorage.setItem('pelada_is_admin', 'true');
+                btnLogin.classList.add('d-none');
+                btnLogout.classList.remove('d-none');
+                if (btnResetTotw) btnResetTotw.classList.remove('d-none');
+                renderTotwTable();
+                alert("Modo de edição ativado! Agora você pode gerenciar o ranking.");
+            } else if (password !== null) {
+                alert("Senha incorreta!");
+            }
+        });
+
+        btnLogout.addEventListener('click', () => {
+            state.isAdmin = false;
+            localStorage.setItem('pelada_is_admin', 'false');
+            btnLogin.classList.remove('d-none');
+            btnLogout.classList.add('d-none');
+            if (btnResetTotw) btnResetTotw.classList.add('d-none');
+            renderTotwTable();
+            alert("Modo de edição desativado. Ranking em modo leitura.");
+        });
+    }
+
+    // Carrega do Cloud na inicialização da aba
+    loadTotwFromCloud();
 }
 
 function renderTotwTable() {
     const tableBody = document.getElementById('totw-table-body');
     if (!tableBody) return;
     tableBody.innerHTML = '';
+
+    // Exibe/oculta o cabeçalho das ações
+    const headerActions = document.getElementById('totw-actions-header');
+    if (headerActions) {
+        if (state.isAdmin) {
+            headerActions.classList.remove('d-none');
+        } else {
+            headerActions.classList.add('d-none');
+        }
+    }
 
     const sortedPlayers = [...state.players].sort((a, b) => {
         const winsA = a.totwWins || 0;
@@ -1023,6 +1172,18 @@ function renderTotwTable() {
             ? `<img src="${thumbnail}" alt="${player.name}" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,0.15); margin-right: 0.5rem; float: left; margin-top: 2px;" onerror="this.style.display='none'">`
             : `<div style="width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.05); display: inline-flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.08); margin-right: 0.5rem; float: left; margin-top: 2px;"><i class="fa-solid fa-user" style="font-size: 0.75rem; color: rgba(255,255,255,0.35);"></i></div>`;
 
+        let actionsHTML = '';
+        if (state.isAdmin) {
+            actionsHTML = `
+                <td style="text-align: center;">
+                    <div class="counter-input" style="gap: 0.75rem;">
+                        <button class="counter-btn dec-totw" data-id="${player.id}" style="width: 32px; height: 32px; font-size: 1.1rem;">-1</button>
+                        <button class="counter-btn inc-totw" data-id="${player.id}" style="width: 44px; height: 32px; font-size: 1.1rem; background-color: var(--primary); border-color: var(--primary); color: var(--bg-primary); font-weight: 800;">+1</button>
+                    </div>
+                </td>
+            `;
+        }
+
         tr.innerHTML = `
             <td>
                 ${avatarHTML}
@@ -1034,29 +1195,28 @@ function renderTotwTable() {
             <td style="text-align: center;">
                 <span class="counter-value" style="font-size: 1.2rem; font-weight: 700;">${wins}</span>
             </td>
-            <td style="text-align: center;">
-                <div class="counter-input" style="gap: 0.75rem;">
-                    <button class="counter-btn dec-totw" data-id="${player.id}" style="width: 32px; height: 32px; font-size: 1.1rem;">-1</button>
-                    <button class="counter-btn inc-totw" data-id="${player.id}" style="width: 44px; height: 32px; font-size: 1.1rem; background-color: var(--primary); border-color: var(--primary); color: var(--bg-primary); font-weight: 800;">+1</button>
-                </div>
-            </td>
+            ${actionsHTML}
         `;
 
-        tr.querySelector('.inc-totw').addEventListener('click', () => {
-            player.totwWins = (player.totwWins || 0) + 1;
-            savePlayersToStorage();
-            renderTotwTable();
-            renderTotwPodium();
-        });
-
-        tr.querySelector('.dec-totw').addEventListener('click', () => {
-            if ((player.totwWins || 0) > 0) {
-                player.totwWins--;
+        if (state.isAdmin) {
+            tr.querySelector('.inc-totw').addEventListener('click', async () => {
+                player.totwWins = (player.totwWins || 0) + 1;
                 savePlayersToStorage();
                 renderTotwTable();
                 renderTotwPodium();
-            }
-        });
+                await saveTotwToCloud();
+            });
+
+            tr.querySelector('.dec-totw').addEventListener('click', async () => {
+                if ((player.totwWins || 0) > 0) {
+                    player.totwWins--;
+                    savePlayersToStorage();
+                    renderTotwTable();
+                    renderTotwPodium();
+                    await saveTotwToCloud();
+                }
+            });
+        }
 
         tableBody.appendChild(tr);
     });
@@ -1204,6 +1364,10 @@ document.addEventListener('DOMContentLoaded', () => {
     renderPlayersTable();
     updateSummaryStats();
     updateConfirmButtonUI();
+
+    // Sincronizar dados com a nuvem de forma assíncrona
+    loadTeamsFromCloud();
+    loadTotwFromCloud();
 });
 
 // ==========================================================================
@@ -1260,8 +1424,12 @@ function commitCurrentDraw() {
     state.currentDrawSaved = true;
     saveHistoryToStorage();
     saveCurrentDrawSavedToStorage();
+    saveTeamsToStorage();
     
     updateConfirmButtonUI();
+    
+    // Sincroniza os times sorteados salvos com a nuvem
+    saveTeamsToCloud();
     
     alert("Sorteio gravado com sucesso no histórico de presença! ⚽");
 }

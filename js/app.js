@@ -260,9 +260,8 @@ function initNavigation() {
             } else if (targetTab === 'sorteio') {
                 updateDrawSummary();
                 renderDrawnTeams();
-            } else if (targetTab === 'financeiro') {
-                renderFinanceTable();
-                updateFinanceSummary();
+            } else if (targetTab === 'cartas') {
+                renderGalleryCards();
             } else if (targetTab === 'estatisticas') {
                 renderTotwTable();
                 renderTotwPodium();
@@ -385,10 +384,26 @@ function renderPlayersTable() {
             ? `<img src="${thumbnail}" alt="${player.name}" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,0.15); margin-right: 0.5rem; vertical-align: middle;" onerror="this.style.display='none'">`
             : `<div style="width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.05); display: inline-flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.08); margin-right: 0.5rem; vertical-align: middle;"><i class="fa-solid fa-user" style="font-size: 0.75rem; color: rgba(255,255,255,0.35);"></i></div>`;
 
+        let actionsCellHTML = '';
+        if (state.isAdmin) {
+            actionsCellHTML = `
+                <td style="text-align: center;">
+                    <div class="action-btns">
+                        <button class="btn-icon edit-btn" data-id="${player.id}" title="Editar Nome/Tipo">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <button class="btn-icon delete-btn" data-id="${player.id}" title="Excluir Jogador">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                </td>
+            `;
+        }
+
         tr.innerHTML = `
             <td style="text-align: center;">
                 <label class="checkbox-custom">
-                    <input type="checkbox" ${player.active ? 'checked' : ''} class="toggle-presence" data-id="${player.id}">
+                    <input type="checkbox" ${player.active ? 'checked' : ''} class="toggle-presence" data-id="${player.id}" ${state.isAdmin ? '' : 'disabled'}>
                     <span class="checkmark"></span>
                 </label>
             </td>
@@ -405,16 +420,7 @@ function renderPlayersTable() {
             <td>
                 ${ratingHTML}
             </td>
-            <td style="text-align: center;">
-                <div class="action-btns">
-                    <button class="btn-icon edit-btn" data-id="${player.id}" title="Editar Nome/Tipo">
-                        <i class="fa-solid fa-pen-to-square"></i>
-                    </button>
-                    <button class="btn-icon delete-btn" data-id="${player.id}" title="Excluir Jogador">
-                        <i class="fa-solid fa-trash-can"></i>
-                    </button>
-                </div>
-            </td>
+            ${actionsCellHTML}
         `;
 
         tableBody.appendChild(tr);
@@ -828,155 +834,7 @@ function copyTeamsToClipboard() {
 }
 
 
-// ==========================================================================
-// ABA: CONTROLE FINANCEIRO
-// ==========================================================================
-function initFinanceTab() {
-    const inputCost = document.getElementById('finance-court-cost');
-    const inputPixKey = document.getElementById('finance-pix-key');
-    const inputPixOwner = document.getElementById('finance-pix-owner');
-    const btnSaveConfigs = document.getElementById('btn-save-finance-configs');
-    const btnCopyBilling = document.getElementById('btn-copy-billing');
-
-    // Carregar configurações nos inputs
-    inputCost.value = state.financeConfig.courtCost;
-    inputPixKey.value = state.financeConfig.pixKey;
-    inputPixOwner.value = state.financeConfig.pixOwner;
-
-    // Salvar configurações financeiras
-    btnSaveConfigs.addEventListener('click', () => {
-        state.financeConfig.courtCost = parseFloat(inputCost.value) || 0;
-        state.financeConfig.pixKey = inputPixKey.value.trim();
-        state.financeConfig.pixOwner = inputPixOwner.value.trim();
-        
-        saveFinanceToStorage();
-        updateFinanceSummary();
-        renderFinanceTable();
-        alert("Configurações financeiras salvas com sucesso!");
-    });
-
-    // Copiar cobrança formatada
-    btnCopyBilling.addEventListener('click', copyBillingMessage);
-}
-
-function renderFinanceTable() {
-    const tableBody = document.getElementById('finance-table-body');
-    tableBody.innerHTML = '';
-
-    const activePlayers = state.players.filter(p => p.active);
-    
-    if (activePlayers.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-secondary); padding: 2rem;">Confirme a presença de jogadores na aba "Jogadores" para gerenciar cobranças.</td></tr>`;
-        return;
-    }
-
-    const valuePerPlayer = activePlayers.length > 0 ? (state.financeConfig.courtCost / activePlayers.length) : 0;
-
-    activePlayers.forEach(player => {
-        const tr = document.createElement('tr');
-        
-        const paidStatusClass = player.paid ? 'paid' : 'unpaid';
-        const paidIcon = player.paid ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-xmark"></i>';
-        const statusBadge = player.paid 
-            ? '<span class="badge badge-type Mensalista">PAGO</span>' 
-            : '<span class="badge badge-type text-danger" style="background-color:rgba(239,68,68,0.1)">PENDENTE</span>';
-
-        tr.innerHTML = `
-            <td style="text-align: center;">
-                ${statusBadge}
-            </td>
-            <td>
-                <strong>${player.name}</strong>
-            </td>
-            <td>
-                <span class="badge badge-type ${player.type}">${player.type}</span>
-            </td>
-            <td style="text-align: right; font-weight:600;">
-                R$ ${valuePerPlayer.toFixed(2)}
-            </td>
-            <td style="text-align: center;">
-                <div class="action-btns">
-                    <button class="btn-toggle-paid ${paidStatusClass}" data-id="${player.id}" title="Alternar status de pagamento">
-                        ${paidIcon}
-                    </button>
-                </div>
-            </td>
-        `;
-
-        // Evento para alternar pago/não pago
-        tr.querySelector('.btn-toggle-paid').addEventListener('click', (e) => {
-            player.paid = !player.paid;
-            savePlayersToStorage();
-            renderFinanceTable();
-            updateFinanceSummary();
-        });
-
-        tableBody.appendChild(tr);
-    });
-}
-
-function updateFinanceSummary() {
-    const activePlayers = state.players.filter(p => p.active);
-    const count = activePlayers.length;
-
-    const valuePerPlayer = count > 0 ? (state.financeConfig.courtCost / count) : 0;
-    const collected = activePlayers.filter(p => p.paid).length * valuePerPlayer;
-    const pending = activePlayers.filter(p => !p.paid).length * valuePerPlayer;
-    const balance = collected - state.financeConfig.courtCost;
-
-    document.getElementById('fin-value-per-player').innerText = `R$ ${valuePerPlayer.toFixed(2)}`;
-    document.getElementById('fin-collected').innerText = `R$ ${collected.toFixed(2)}`;
-    document.getElementById('fin-pending').innerText = `R$ ${pending.toFixed(2)}`;
-    
-    const balanceEl = document.getElementById('fin-balance');
-    balanceEl.innerText = `R$ ${balance.toFixed(2)}`;
-    if (balance < 0) {
-        balanceEl.className = 'text-danger';
-    } else if (balance > 0) {
-        balanceEl.className = 'text-success';
-    } else {
-        balanceEl.className = '';
-    }
-}
-
-function copyBillingMessage() {
-    const activePlayers = state.players.filter(p => p.active);
-    if (activePlayers.length === 0) return;
-
-    const valuePerPlayer = state.financeConfig.courtCost / activePlayers.length;
-    
-    let text = `💰 *COBRANÇA DA PELADA* 💰\n\n`;
-    text += `Fala galera! A conta da quadra hoje ficou em:\n`;
-    text += `• Custo Total: *R$ ${state.financeConfig.courtCost.toFixed(2)}*\n`;
-    text += `• Total de confirmados: *${activePlayers.length} atletas*\n`;
-    text += `• Valor por cabeça: *R$ ${valuePerPlayer.toFixed(2)}*\n\n`;
-
-    if (state.financeConfig.pixKey) {
-        text += `🔑 *Chave PIX:* \`${state.financeConfig.pixKey}\`\n`;
-        if (state.financeConfig.pixOwner) {
-            text += `👤 *Nome:* ${state.financeConfig.pixOwner}\n`;
-        }
-        text += `\n`;
-    }
-
-    const pendingPlayers = activePlayers.filter(p => !p.paid);
-    if (pendingPlayers.length > 0) {
-        text += `⚠️ *Ainda faltam pagar:* \n`;
-        pendingPlayers.forEach(p => {
-            text += `- ${p.name}\n`;
-        });
-    } else {
-        text += `✅ Todos os presentes já realizaram o pagamento! Valeu!`;
-    }
-
-    navigator.clipboard.writeText(text)
-        .then(() => {
-            alert("Mensagem de cobrança copiada para o WhatsApp! 📲");
-        })
-        .catch(err => {
-            alert("Não foi possível copiar automaticamente.");
-        });
-}
+// A aba de Controle Financeiro foi descontinuada e substituída pela Galeria de Cards.
 
 
 // ==========================================================================
@@ -1071,6 +929,121 @@ async function saveTotwToCloud() {
     }
 }
 
+function updateAdminUI() {
+    const btnLogin = document.getElementById('btn-admin-login');
+    const btnLogout = document.getElementById('btn-admin-logout');
+    const cardNovoJogador = document.getElementById('card-novo-jogador');
+    const cardConfigSorteio = document.getElementById('card-config-sorteio');
+    const btnConfirmDraw = document.getElementById('btn-confirm-draw');
+    const btnRedraw = document.getElementById('btn-redraw');
+    const btnCopyTeams = document.getElementById('btn-copy-teams');
+    const btnResetTotw = document.getElementById('btn-reset-totw');
+
+    // Elementos de lote de jogadores
+    const btnConfirmAll = document.getElementById('btn-confirm-all');
+    const btnUnconfirmAll = document.getElementById('btn-unconfirm-all');
+
+    // Cabeçalhos de ações nas tabelas
+    const headerActions = document.getElementById('totw-actions-header');
+    const headerPlayerActions = document.getElementById('player-actions-header');
+
+    if (state.isAdmin) {
+        if (btnLogin) btnLogin.classList.add('d-none');
+        if (btnLogout) btnLogout.classList.remove('d-none');
+        if (cardNovoJogador) cardNovoJogador.classList.remove('d-none');
+        if (cardConfigSorteio) cardConfigSorteio.classList.remove('d-none');
+        
+        if (btnConfirmDraw) {
+            if (state.drawnTeams && state.drawnTeams.length > 0) {
+                btnConfirmDraw.classList.remove('d-none');
+            } else {
+                btnConfirmDraw.classList.add('d-none');
+            }
+        }
+        if (btnRedraw) btnRedraw.classList.remove('d-none');
+        if (btnCopyTeams) btnCopyTeams.classList.remove('d-none');
+        if (btnResetTotw) btnResetTotw.classList.remove('d-none');
+        if (btnConfirmAll) btnConfirmAll.classList.remove('d-none');
+        if (btnUnconfirmAll) btnUnconfirmAll.classList.remove('d-none');
+
+        if (headerActions) headerActions.classList.remove('d-none');
+        if (headerPlayerActions) headerPlayerActions.classList.remove('d-none');
+    } else {
+        if (btnLogin) btnLogin.classList.remove('d-none');
+        if (btnLogout) btnLogout.classList.add('d-none');
+        if (cardNovoJogador) cardNovoJogador.classList.add('d-none');
+        if (cardConfigSorteio) cardConfigSorteio.classList.add('d-none');
+        if (btnConfirmDraw) btnConfirmDraw.classList.add('d-none');
+        if (btnRedraw) btnRedraw.classList.add('d-none');
+        if (btnCopyTeams) btnCopyTeams.classList.add('d-none');
+        if (btnResetTotw) btnResetTotw.classList.add('d-none');
+        if (btnConfirmAll) btnConfirmAll.classList.add('d-none');
+        if (btnUnconfirmAll) btnUnconfirmAll.classList.add('d-none');
+
+        if (headerActions) headerActions.classList.add('d-none');
+        if (headerPlayerActions) headerPlayerActions.classList.add('d-none');
+    }
+}
+
+function renderGalleryCards() {
+    const grid = document.getElementById('gallery-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    // Ordenar todos os jogadores por nota (decrescente)
+    const sorted = [...state.players].sort((a, b) => b.rating - a.rating);
+
+    if (sorted.length === 0) {
+        grid.innerHTML = `<div style="text-align: center; color: var(--text-secondary); width: 100%; padding: 2rem;">Nenhum card disponível. Cadastre jogadores primeiro!</div>`;
+        return;
+    }
+
+    sorted.forEach(player => {
+        const card = document.createElement('div');
+        card.className = 'fut-card';
+
+        let posAbbr = 'LIN';
+        if (player.position === 'Goleiro') posAbbr = 'GOL';
+        else if (player.position === 'Zagueiro') posAbbr = 'DF';
+        else if (player.position === 'Meio-Campo') posAbbr = 'MC';
+        else if (player.position === 'Atacante') posAbbr = 'ATA';
+
+        const cardEntry = getPlayerCardEntry(player.id);
+        if (cardEntry) {
+            card.classList.add('has-image-card');
+            card.innerHTML = `
+                <div class="ppro-card">
+                    <img class="ppro-card__img" src="public${cardEntry.card.webp}" alt="${player.name}" onerror="this.src='public${cardEntry.card.png}'">
+                    <div class="ppro-card__rating" style="
+                        left: ${cardEntry.ratingSlot.xPercent * 100}%;
+                        top: ${cardEntry.ratingSlot.yPercent * 100}%;
+                        width: ${cardEntry.ratingSlot.widthPercent * 100}%;
+                        height: ${cardEntry.ratingSlot.heightPercent * 100}%;
+                        justify-content: ${cardEntry.ratingSlot.textAlign === 'left' ? 'flex-start' : cardEntry.ratingSlot.textAlign === 'right' ? 'flex-end' : 'center'};
+                        color: ${cardEntry.ratingSlot.textColor || '#2a1e04'};
+                        text-shadow: ${cardEntry.ratingSlot.textShadow || 'none'};
+                        font-weight: ${cardEntry.ratingSlot.fontWeight || '800'};
+                    ">${Math.round(player.rating)}</div>
+                </div>
+            `;
+        } else {
+            const badgeClass = getRatingBadgeClass(player.rating);
+            card.classList.add(badgeClass);
+            card.innerHTML = `
+                <div class="fut-badge-header" style="justify-content: center;">
+                    <span class="fut-pos">${posAbbr}</span>
+                </div>
+                <div class="fut-avatar">
+                    <i class="fa-solid fa-shirt"></i>
+                </div>
+                <div class="fut-name">${player.name.split(' ')[0]}</div>
+            `;
+        }
+
+        grid.appendChild(card);
+    });
+}
+
 function initStatsTab() {
     const btnResetTotw = document.getElementById('btn-reset-totw');
     const btnLogin = document.getElementById('btn-admin-login');
@@ -1094,28 +1067,18 @@ function initStatsTab() {
     if (btnLogin && btnLogout) {
         // Checar estado inicial do admin
         const cachedAdmin = localStorage.getItem('pelada_is_admin') === 'true';
-        if (cachedAdmin) {
-            state.isAdmin = true;
-            btnLogin.classList.add('d-none');
-            btnLogout.classList.remove('d-none');
-            if (btnResetTotw) btnResetTotw.classList.remove('d-none');
-        } else {
-            state.isAdmin = false;
-            btnLogin.classList.remove('d-none');
-            btnLogout.classList.add('d-none');
-            if (btnResetTotw) btnResetTotw.classList.add('d-none');
-        }
+        state.isAdmin = cachedAdmin;
+        updateAdminUI();
 
         btnLogin.addEventListener('click', () => {
-            const password = prompt("Digite a senha do administrador para liberar a edição do ranking:");
+            const password = prompt("Digite a senha do administrador para liberar a edição:");
             if (password === 'sesinl') { // Senha padrão solicitada
                 state.isAdmin = true;
                 localStorage.setItem('pelada_is_admin', 'true');
-                btnLogin.classList.add('d-none');
-                btnLogout.classList.remove('d-none');
-                if (btnResetTotw) btnResetTotw.classList.remove('d-none');
+                updateAdminUI();
                 renderTotwTable();
-                alert("Modo de edição ativado! Agora você pode gerenciar o ranking.");
+                renderPlayersTable(); // Re-renderiza a tabela de jogadores para mostrar opções
+                alert("Modo de edição ativado! Painel de controle liberado.");
             } else if (password !== null) {
                 alert("Senha incorreta!");
             }
@@ -1124,11 +1087,10 @@ function initStatsTab() {
         btnLogout.addEventListener('click', () => {
             state.isAdmin = false;
             localStorage.setItem('pelada_is_admin', 'false');
-            btnLogin.classList.remove('d-none');
-            btnLogout.classList.add('d-none');
-            if (btnResetTotw) btnResetTotw.classList.add('d-none');
+            updateAdminUI();
             renderTotwTable();
-            alert("Modo de edição desativado. Ranking em modo leitura.");
+            renderPlayersTable(); // Re-renderiza a tabela de jogadores para ocultar opções
+            alert("Modo de edição desativado. Painel em modo leitura.");
         });
     }
 
@@ -1349,7 +1311,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initPlayersTab();
     initEditModal();
     initSorteadorTab();
-    initFinanceTab();
+    // A aba financeiro foi descontinuada
     initStatsTab();
 
     // Carregar manifesto de cartas e renderizar/atualizar elementos associados
@@ -1358,12 +1320,15 @@ document.addEventListener('DOMContentLoaded', () => {
         renderDrawnTeams();
         renderTotwTable();
         renderTotwPodium();
+        renderGalleryCards();
     });
 
     // Render Inicial
     renderPlayersTable();
     updateSummaryStats();
     updateConfirmButtonUI();
+    renderGalleryCards();
+    updateAdminUI();
 
     // Sincronizar dados com a nuvem de forma assíncrona
     loadTeamsFromCloud();

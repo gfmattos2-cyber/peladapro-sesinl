@@ -1380,3 +1380,21 @@ tr:hover {
     border: 1px solid rgba(180, 83, 9, 0.25);
 }
 
+/* Galeria de Cards no Menu Principal */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 2rem 1.5rem;
+    justify-items: center;
+    margin-top: 1rem;
+}
+
+.cards-grid .fut-card {
+    cursor: default;
+}
+
+.cards-grid .fut-card:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.25);
+    border-color: var(--primary);
+}

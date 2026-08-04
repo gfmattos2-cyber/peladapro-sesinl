@@ -264,9 +264,8 @@ function initNavigation() {
                 renderFinanceTable();
                 updateFinanceSummary();
             } else if (targetTab === 'estatisticas') {
-                renderStatsTable();
-                updateStatsLeaderboard();
-                renderHistoryStats();
+                renderTotwTable();
+                renderTotwPodium();
             }
         });
     });
@@ -978,47 +977,46 @@ function copyBillingMessage() {
 // ==========================================================================
 // ABA: ESTATÍSTICAS E SÚMULA
 // ==========================================================================
+// ==========================================================================
+// ABA: RANKING - TIME DA SEMANA
+// ==========================================================================
 function initStatsTab() {
-    const btnReset = document.getElementById('btn-reset-stats');
-    btnReset.addEventListener('click', () => {
-        if (confirm("Tem certeza que deseja zerar os gols, assistências e cartões desta rodada?")) {
-            state.players.forEach(p => {
-                p.goals = 0;
-                p.assists = 0;
-                p.yellowCards = 0;
-                p.redCard = false;
-            });
-            savePlayersToStorage();
-            renderStatsTable();
-            updateStatsLeaderboard();
-        }
-    });
-
-    const btnResetHistory = document.getElementById('btn-reset-history');
-    if (btnResetHistory) {
-        btnResetHistory.addEventListener('click', resetHistory);
+    const btnResetTotw = document.getElementById('btn-reset-totw');
+    if (btnResetTotw) {
+        btnResetTotw.addEventListener('click', () => {
+            if (confirm("Tem certeza que deseja ZERAR o ranking do Time da Semana de todos os jogadores? Esta ação não pode ser desfeita.")) {
+                state.players.forEach(p => {
+                    p.totwWins = 0;
+                });
+                savePlayersToStorage();
+                renderTotwTable();
+                renderTotwPodium();
+                alert("Ranking redefinido com sucesso!");
+            }
+        });
     }
 }
 
-function renderStatsTable() {
-    const tableBody = document.getElementById('stats-table-body');
+function renderTotwTable() {
+    const tableBody = document.getElementById('totw-table-body');
+    if (!tableBody) return;
     tableBody.innerHTML = '';
 
-    const activePlayers = state.players.filter(p => p.active);
+    const sortedPlayers = [...state.players].sort((a, b) => {
+        const winsA = a.totwWins || 0;
+        const winsB = b.totwWins || 0;
+        if (winsB !== winsA) return winsB - winsA;
+        return a.name.localeCompare(b.name);
+    });
 
-    if (activePlayers.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-secondary); padding: 2rem;">Confirme a presença de jogadores na aba "Jogadores" para registrar estatísticas.</td></tr>`;
+    if (sortedPlayers.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--text-secondary); padding: 2rem;">Nenhum jogador cadastrado. Adicione jogadores na aba "Jogadores".</td></tr>`;
         return;
     }
 
-    // Ordena por gols + assistencias descrescente
-    activePlayers.sort((a,b) => (b.goals + b.assists) - (a.goals + a.assists));
-
-    activePlayers.forEach(player => {
+    sortedPlayers.forEach(player => {
         const tr = document.createElement('tr');
-
-        const yellowClass = player.yellowCards > 0 ? 'active' : '';
-        const redClass = player.redCard ? 'active' : '';
+        const wins = player.totwWins || 0;
 
         const thumbnail = getPlayerThumbnail(player.id);
         const avatarHTML = thumbnail 
@@ -1034,103 +1032,64 @@ function renderStatsTable() {
                 </div>
             </td>
             <td style="text-align: center;">
-                <div class="counter-input">
-                    <button class="counter-btn dec-goals" data-id="${player.id}">-</button>
-                    <span class="counter-value">${player.goals}</span>
-                    <button class="counter-btn inc-goals" data-id="${player.id}">+</button>
-                </div>
+                <span class="counter-value" style="font-size: 1.2rem; font-weight: 700;">${wins}</span>
             </td>
             <td style="text-align: center;">
-                <div class="counter-input">
-                    <button class="counter-btn dec-assists" data-id="${player.id}">-</button>
-                    <span class="counter-value">${player.assists}</span>
-                    <button class="counter-btn inc-assists" data-id="${player.id}">+</button>
-                </div>
-            </td>
-            <td style="text-align: center;">
-                <div class="card-status">
-                    <button class="btn-card-toggle yellow ${yellowClass}" data-id="${player.id}" title="Amarelo (Clique para somar)"></button>
-                    <button class="btn-card-toggle red ${redClass}" data-id="${player.id}" title="Cartão Vermelho"></button>
+                <div class="counter-input" style="gap: 0.75rem;">
+                    <button class="counter-btn dec-totw" data-id="${player.id}" style="width: 32px; height: 32px; font-size: 1.1rem;">-1</button>
+                    <button class="counter-btn inc-totw" data-id="${player.id}" style="width: 44px; height: 32px; font-size: 1.1rem; background-color: var(--primary); border-color: var(--primary); color: var(--bg-primary); font-weight: 800;">+1</button>
                 </div>
             </td>
         `;
 
-        // Eventos dos Contadores de Gols e Assistências
-        tr.querySelector('.inc-goals').addEventListener('click', () => {
-            player.goals = (player.goals || 0) + 1;
+        tr.querySelector('.inc-totw').addEventListener('click', () => {
+            player.totwWins = (player.totwWins || 0) + 1;
             savePlayersToStorage();
-            renderStatsTable();
-            updateStatsLeaderboard();
+            renderTotwTable();
+            renderTotwPodium();
         });
 
-        tr.querySelector('.dec-goals').addEventListener('click', () => {
-            if (player.goals > 0) {
-                player.goals--;
+        tr.querySelector('.dec-totw').addEventListener('click', () => {
+            if ((player.totwWins || 0) > 0) {
+                player.totwWins--;
                 savePlayersToStorage();
-                renderStatsTable();
-                updateStatsLeaderboard();
+                renderTotwTable();
+                renderTotwPodium();
             }
-        });
-
-        tr.querySelector('.inc-assists').addEventListener('click', () => {
-            player.assists = (player.assists || 0) + 1;
-            savePlayersToStorage();
-            renderStatsTable();
-            updateStatsLeaderboard();
-        });
-
-        tr.querySelector('.dec-assists').addEventListener('click', () => {
-            if (player.assists > 0) {
-                player.assists--;
-                savePlayersToStorage();
-                renderStatsTable();
-                updateStatsLeaderboard();
-            }
-        });
-
-        // Cartões
-        tr.querySelector('.btn-card-toggle.yellow').addEventListener('click', (e) => {
-            player.yellowCards = (player.yellowCards || 0) + 1;
-            if (player.yellowCards > 2) {
-                player.yellowCards = 0;
-            }
-            savePlayersToStorage();
-            renderStatsTable();
-        });
-
-        tr.querySelector('.btn-card-toggle.red').addEventListener('click', (e) => {
-            player.redCard = !player.redCard;
-            savePlayersToStorage();
-            renderStatsTable();
         });
 
         tableBody.appendChild(tr);
     });
 }
 
-function updateStatsLeaderboard() {
-    const activePlayers = state.players.filter(p => p.active);
-    
-    let bestScorer = { name: '-', score: 0 };
-    let bestPlaymaker = { name: '-', score: 0 };
-    let bestMvp = { name: '-', score: 0 }; // MVP = gols * 1.5 + assistencias
+function renderTotwPodium() {
+    const podiumEl = document.getElementById('totw-podium');
+    if (!podiumEl) return;
+    podiumEl.innerHTML = '';
 
-    activePlayers.forEach(p => {
-        if (p.goals > bestScorer.score) {
-            bestScorer = { name: p.name, score: p.goals };
-        }
-        if (p.assists > bestPlaymaker.score) {
-            bestPlaymaker = { name: p.name, score: p.assists };
-        }
-        const mvpScore = (p.goals * 1.5) + p.assists;
-        if (mvpScore > bestMvp.score) {
-            bestMvp = { name: p.name, score: mvpScore };
-        }
+    const sortedTotw = [...state.players]
+        .filter(p => (p.totwWins || 0) > 0)
+        .sort((a, b) => (b.totwWins || 0) - (a.totwWins || 0));
+
+    if (sortedTotw.length === 0) {
+        podiumEl.innerHTML = `<div style="text-align: center; color: var(--text-secondary); padding: 1rem 0;">Nenhum jogador eleito ainda.</div>`;
+        return;
+    }
+
+    const top3 = sortedTotw.slice(0, 3);
+    const classes = ['mvp', 'scorer', 'assist']; 
+    const icons = ['fa-crown text-warning', 'fa-medal text-info', 'fa-award text-success'];
+
+    top3.forEach((p, idx) => {
+        const item = document.createElement('div');
+        item.className = `podium-item ${classes[idx]}`;
+        item.innerHTML = `
+            <i class="fa-solid ${icons[idx]} podium-icon"></i>
+            <span class="podium-name">${p.name}</span>
+            <span class="podium-lbl">${p.totwWins} ${p.totwWins === 1 ? 'Vitória' : 'Vitórias'}</span>
+        `;
+        podiumEl.appendChild(item);
     });
-
-    document.getElementById('podium-scorer').innerText = bestScorer.score > 0 ? `${bestScorer.name} (${bestScorer.score} Gols)` : '-';
-    document.getElementById('podium-assist').innerText = bestPlaymaker.score > 0 ? `${bestPlaymaker.name} (${bestPlaymaker.score} Assists)` : '-';
-    document.getElementById('podium-mvp').innerText = bestMvp.score > 0 ? `${bestMvp.name}` : '-';
 }
 
 // ==========================================================================
@@ -1237,8 +1196,8 @@ document.addEventListener('DOMContentLoaded', () => {
     loadManifest().then(() => {
         renderPlayersTable();
         renderDrawnTeams();
-        renderHistoryStats();
-        renderStatsTable();
+        renderTotwTable();
+        renderTotwPodium();
     });
 
     // Render Inicial
@@ -1303,7 +1262,6 @@ function commitCurrentDraw() {
     saveCurrentDrawSavedToStorage();
     
     updateConfirmButtonUI();
-    renderHistoryStats();
     
     alert("Sorteio gravado com sucesso no histórico de presença! ⚽");
 }
@@ -1316,86 +1274,11 @@ function resetHistory() {
         saveHistoryToStorage();
         saveCurrentDrawSavedToStorage();
         updateConfirmButtonUI();
-        renderHistoryStats();
         alert("Histórico de sorteios redefinido com sucesso!");
     }
 }
 
-function renderHistoryStats() {
-    const tbody = document.getElementById('history-table-body');
-    if (!tbody) return;
-
-    tbody.innerHTML = '';
-
-    const registeredPlayers = state.players;
-    if (registeredPlayers.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-secondary); padding: 1.5rem;">Nenhum jogador cadastrado para exibir no histórico.</td></tr>`;
-        return;
-    }
-
-    // Ordenação: Goleiros fixos por último. Linha por idas a C (decrescente).
-    const sorted = [...registeredPlayers].sort((a, b) => {
-        if (a.position === 'Goleiro' && b.position !== 'Goleiro') return 1;
-        if (a.position !== 'Goleiro' && b.position === 'Goleiro') return -1;
-
-        const hA = state.history[a.id] || { timesInC: 0 };
-        const hB = state.history[b.id] || { timesInC: 0 };
-        
-        if (hB.timesInC !== hA.timesInC) {
-            return hB.timesInC - hA.timesInC;
-        }
-        return a.name.localeCompare(b.name);
-    });
-
-    sorted.forEach(p => {
-        const h = state.history[p.id] || {
-            timesInC: 0,
-            totalDraws: 0,
-            lastTeam: null,
-            teammateCounts: {}
-        };
-
-        const totalDraws = h.totalDraws || 0;
-        const timesInC = h.timesInC || 0;
-        const freq = totalDraws > 0 ? ((timesInC / totalDraws) * 100).toFixed(1) + '%' : '0%';
-        const lastTeam = h.lastTeam ? `Time ${h.lastTeam}` : '-';
-
-        let teammateCountsArray = [];
-        if (h.teammateCounts) {
-            Object.keys(h.teammateCounts).forEach(otherId => {
-                const count = h.teammateCounts[otherId];
-                const otherPlayer = state.players.find(pl => pl.id === otherId);
-                if (otherPlayer && count > 0) {
-                    teammateCountsArray.push({ name: otherPlayer.name.split(' ')[0], count });
-                }
-            });
-        }
-        
-        teammateCountsArray.sort((a, b) => b.count - a.count);
-        const topPartners = teammateCountsArray.slice(0, 3)
-            .map(x => `${x.name} (${x.count}x)`)
-            .join(', ') || 'Nenhum';
-
-        const thumbnail = getPlayerThumbnail(p.id);
-        const avatarHTML = thumbnail 
-            ? `<img src="${thumbnail}" alt="${p.name}" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,0.15); margin-right: 0.4rem; vertical-align: middle;" onerror="this.style.display='none'">`
-            : `<div style="width: 24px; height: 24px; border-radius: 50%; background: rgba(255,255,255,0.05); display: inline-flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.08); margin-right: 0.4rem; vertical-align: middle;"><i class="fa-solid fa-user" style="font-size: 0.65rem; color: rgba(255,255,255,0.35);"></i></div>`;
-
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td style="vertical-align: middle; white-space: nowrap;">
-                ${avatarHTML}
-                <strong style="vertical-align: middle;">${p.name}</strong> ${p.position === 'Goleiro' ? '<span class="badge-gol-stats" style="font-size:0.6rem; padding: 0.05rem 0.25rem; font-weight:800; background:rgba(245,158,11,0.15); color:#fbbf24; border:1px solid rgba(245,158,11,0.25); border-radius:4px; margin-left:0.3rem; vertical-align: middle;">GOL</span>' : ''}
-            </td>
-            <td style="text-align: center;">${totalDraws}</td>
-            <td style="text-align: center;">${timesInC}</td>
-            <td style="text-align: center;">${freq}</td>
-            <td style="text-align: center;">${lastTeam}</td>
-            <td><span style="font-size: 0.85rem; color: var(--text-secondary);">${topPartners}</span></td>
-        `;
-        tbody.appendChild(row);
-    });
-}
+// A definição de renderHistoryStats foi removida, mantendo o histórico nos dados do algoritmo
 
 function updateConfirmButtonUI() {
     const btnConfirmDraw = document.getElementById('btn-confirm-draw');

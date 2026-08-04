@@ -325,14 +325,24 @@
                     <!-- Lançamento / Controle de Vitórias -->
                     <div class="main-column">
                         <div class="card glass list-card">
-                            <h3><i class="fa-solid fa-star text-warning"></i> Controlar Vitórias</h3>
+                            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; width: 100%;">
+                                <h3 style="margin: 0;"><i class="fa-solid fa-star text-warning"></i> Ranking Time da Semana</h3>
+                                <div style="display: flex; gap: 0.5rem; margin-left: auto;">
+                                    <button id="btn-admin-login" class="btn btn-outline btn-sm" style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; padding: 0.35rem 0.75rem;">
+                                        <i class="fa-solid fa-lock"></i> Login Admin
+                                    </button>
+                                    <button id="btn-admin-logout" class="btn btn-outline btn-sm d-none" style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; padding: 0.35rem 0.75rem; color: var(--danger); border-color: rgba(239, 68, 68, 0.4);">
+                                        <i class="fa-solid fa-lock-open"></i> Sair Admin
+                                    </button>
+                                </div>
+                            </div>
                             <div class="table-container mt-3">
                                 <table class="stats-table">
                                     <thead>
                                         <tr>
                                             <th>Jogador</th>
                                             <th style="width: 150px; text-align: center;">Vitórias</th>
-                                            <th style="width: 180px; text-align: center;">Ações</th>
+                                            <th id="totw-actions-header" style="width: 180px; text-align: center;" class="d-none">Ações</th>
                                         </tr>
                                     </thead>
                                     <tbody id="totw-table-body">

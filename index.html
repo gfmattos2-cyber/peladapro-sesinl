@@ -304,88 +304,43 @@
             <!-- TAB: ESTATÍSTICAS -->
             <section id="tab-estatisticas" class="tab-content">
                 <div class="view-header">
-                    <h2>Estatísticas e Súmula do Dia</h2>
-                    <p>Registre os gols, assistências e cartões à medida que os jogos acontecem para premiar o craque da rodada.</p>
+                    <h2>Ranking - Time da Semana</h2>
+                    <p>Controle e premie os jogadores eleitos para o Time da Semana ao final das rodadas.</p>
                 </div>
 
                 <div class="grid-layout">
-                    <!-- Painel de Líderes -->
+                    <!-- Painel de Líderes (Pódio) -->
                     <div class="sidebar-column">
                         <div class="card glass leaderboard-card">
-                            <h3><i class="fa-solid fa-trophy text-warning"></i> Destaques da Pelada</h3>
-                            <div class="podium">
-                                <div class="podium-item mvp">
-                                    <i class="fa-solid fa-crown podium-icon text-warning"></i>
-                                    <span class="podium-name" id="podium-mvp">-</span>
-                                    <span class="podium-lbl">Artilheiro + Garçom</span>
-                                </div>
-                                <div class="podium-item scorer">
-                                    <i class="fa-solid fa-volleyball podium-icon text-info"></i>
-                                    <span class="podium-name" id="podium-scorer">-</span>
-                                    <span class="podium-lbl">Artilheiro</span>
-                                </div>
-                                <div class="podium-item assist">
-                                    <i class="fa-solid fa-handshake-angle podium-icon text-success"></i>
-                                    <span class="podium-name" id="podium-assist">-</span>
-                                    <span class="podium-lbl">Líder em Assistências</span>
-                                </div>
+                            <h3><i class="fa-solid fa-trophy text-warning"></i> Pódio Geral</h3>
+                            <div class="podium" id="totw-podium" style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+                                <!-- Preenchido dinamicamente via JS (Top 3) -->
                             </div>
-                            <button id="btn-reset-stats" class="btn btn-outline btn-danger-hover btn-block mt-3">
-                                <i class="fa-solid fa-trash-can"></i> Zerar Súmula do Dia
+                            <button id="btn-reset-totw" class="btn btn-outline btn-danger-hover btn-block mt-3">
+                                <i class="fa-solid fa-trash-can"></i> Zerar Ranking
                             </button>
                         </div>
                     </div>
 
-                    <!-- Lançamento de Dados -->
+                    <!-- Lançamento / Controle de Vitórias -->
                     <div class="main-column">
                         <div class="card glass list-card">
-                            <h3><i class="fa-solid fa-pen-to-square"></i> Registro de Eventos da Partida</h3>
+                            <h3><i class="fa-solid fa-star text-warning"></i> Controlar Vitórias</h3>
                             <div class="table-container mt-3">
                                 <table class="stats-table">
                                     <thead>
                                         <tr>
-                                            <th>Nome do Jogador</th>
-                                            <th style="width: 140px; text-align: center;">Gols</th>
-                                            <th style="width: 140px; text-align: center;">Assistências</th>
-                                            <th style="width: 100px; text-align: center;">Cartões Y/R</th>
+                                            <th>Jogador</th>
+                                            <th style="width: 150px; text-align: center;">Vitórias</th>
+                                            <th style="width: 180px; text-align: center;">Ações</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="stats-table-body">
+                                    <tbody id="totw-table-body">
                                         <!-- Preenchido dinamicamente via JS -->
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Seção de Histórico de Presença e Banco (Sorteio Justo) -->
-                <div class="card glass list-card mt-4">
-                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-                        <h3 style="margin: 0;"><i class="fa-solid fa-clock-rotate-left"></i> Histórico de Sorteios e Rotatividade no Banco</h3>
-                        <button id="btn-reset-history" class="btn btn-outline btn-sm btn-danger-hover">
-                            <i class="fa-solid fa-trash-can"></i> Zerar Histórico de Sorteios
-                        </button>
-                    </div>
-                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.5rem; line-height: 1.4;">
-                        Acompanhe a participação dos atletas e a rotatividade de idas ao <strong>Time C (Banco/Reserva)</strong>. O sistema usa esses dados para priorizar quem tem maior débito de banco e evitar repetição frequente de duplas nos times.
-                    </p>
-                    <div class="table-container mt-3">
-                        <table class="stats-table">
-                            <thead>
-                                <tr>
-                                    <th>Jogador</th>
-                                    <th style="width: 120px; text-align: center;">Total Sorteios</th>
-                                    <th style="width: 120px; text-align: center;">No Time C (Banco)</th>
-                                    <th style="width: 120px; text-align: center;">Frequência Banco</th>
-                                    <th style="width: 120px; text-align: center;">Último Time</th>
-                                    <th>Parceiros Mais Frequentes (Top 3)</th>
-                                </tr>
-                            </thead>
-                            <tbody id="history-table-body">
-                                <!-- Preenchido dinamicamente via JS -->
-                            </tbody>
-                        </table>
                     </div>
                 </div>
             </section>

@@ -944,6 +944,8 @@ async function saveTeamsToCloud() {
 function updateAdminUI() {
     const btnLogin = document.getElementById('btn-admin-login');
     const btnLogout = document.getElementById('btn-admin-logout');
+    const btnCloudPull = document.getElementById('btn-cloud-pull');
+    const btnCloudPush = document.getElementById('btn-cloud-push');
     const cardNovoJogador = document.getElementById('card-novo-jogador');
     const cardConfigSorteio = document.getElementById('card-config-sorteio');
     const btnConfirmDraw = document.getElementById('btn-confirm-draw');
@@ -962,6 +964,8 @@ function updateAdminUI() {
     if (state.isAdmin) {
         if (btnLogin) btnLogin.classList.add('d-none');
         if (btnLogout) btnLogout.classList.remove('d-none');
+        if (btnCloudPull) btnCloudPull.classList.remove('d-none');
+        if (btnCloudPush) btnCloudPush.classList.remove('d-none');
         if (cardNovoJogador) cardNovoJogador.classList.remove('d-none');
         if (cardConfigSorteio) cardConfigSorteio.classList.remove('d-none');
         
@@ -983,6 +987,8 @@ function updateAdminUI() {
     } else {
         if (btnLogin) btnLogin.classList.remove('d-none');
         if (btnLogout) btnLogout.classList.add('d-none');
+        if (btnCloudPull) btnCloudPull.classList.add('d-none');
+        if (btnCloudPush) btnCloudPush.classList.add('d-none');
         if (cardNovoJogador) cardNovoJogador.classList.add('d-none');
         if (cardConfigSorteio) cardConfigSorteio.classList.add('d-none');
         if (btnConfirmDraw) btnConfirmDraw.classList.add('d-none');
@@ -1344,6 +1350,29 @@ document.addEventListener('DOMContentLoaded', () => {
     updateConfirmButtonUI();
     renderGalleryCards();
     updateAdminUI();
+
+    // Listeners para os botões de nuvem do Google Planilhas
+    const btnCloudPull = document.getElementById('btn-cloud-pull');
+    const btnCloudPush = document.getElementById('btn-cloud-push');
+    
+    if (btnCloudPull) {
+        btnCloudPull.addEventListener('click', async () => {
+            if (confirm("Deseja importar os dados da Planilha Google? Isso substituirá seus dados locais atuais.")) {
+                await loadPlayersFromCloud();
+                alert("Dados importados da Planilha Google com sucesso! 📊");
+            }
+        });
+    }
+    
+    if (btnCloudPush) {
+        btnCloudPush.addEventListener('click', async () => {
+            if (confirm("Deseja exportar seus dados locais para a Planilha Google? Isso substituirá as informações que estão lá.")) {
+                await savePlayersToCloud();
+                await saveTeamsToCloud();
+                alert("Dados exportados e salvos na Planilha Google com sucesso! 📊");
+            }
+        });
+    }
 
     // Sincronizar dados com a Planilha Google de forma assíncrona
     loadPlayersFromCloud();

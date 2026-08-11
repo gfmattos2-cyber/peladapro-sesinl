@@ -290,7 +290,7 @@ function initPlayersTab() {
     }
 
     // Submissão do Formulário (Adicionar Jogador)
-    playerForm.addEventListener('submit', (e) => {
+    playerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const nameInput = document.getElementById('player-name');
         const posSelect = document.getElementById('player-position');
@@ -312,6 +312,7 @@ function initPlayersTab() {
 
         state.players.push(newPlayer);
         savePlayersToStorage();
+        await savePlayersToCloud(); // Sincroniza com a nuvem
 
         // Resetar formulário
         nameInput.value = '';
@@ -321,19 +322,22 @@ function initPlayersTab() {
         // Atualizar UI
         renderPlayersTable();
         updateSummaryStats();
+        renderGalleryCards(); // Atualiza a galeria de cards
     });
 
     // Botões de confirmação em massa
-    btnConfirmAll.addEventListener('click', () => {
+    btnConfirmAll.addEventListener('click', async () => {
         state.players.forEach(p => p.active = true);
         savePlayersToStorage();
+        await savePlayersToCloud(); // Sincroniza com a nuvem
         renderPlayersTable();
         updateSummaryStats();
     });
 
-    btnUnconfirmAll.addEventListener('click', () => {
+    btnUnconfirmAll.addEventListener('click', async () => {
         state.players.forEach(p => p.active = false);
         savePlayersToStorage();
+        await savePlayersToCloud(); // Sincroniza com a nuvem
         renderPlayersTable();
         updateSummaryStats();
     });
@@ -433,7 +437,7 @@ function renderPlayersTable() {
 function addTableEventListeners() {
     // Checkbox de Presença
     document.querySelectorAll('.toggle-presence').forEach(cb => {
-        cb.addEventListener('change', (e) => {
+        cb.addEventListener('change', async (e) => {
             const pId = e.target.getAttribute('data-id');
             const player = state.players.find(p => p.id === pId);
             if (player) {
@@ -443,6 +447,7 @@ function addTableEventListeners() {
                     player.paid = false;
                 }
                 savePlayersToStorage();
+                await savePlayersToCloud(); // Sincroniza com a nuvem
                 updateSummaryStats();
                 // Efeito visual na linha da tabela
                 const tr = e.target.closest('tr');
@@ -457,15 +462,17 @@ function addTableEventListeners() {
 
     // Botão de Excluir
     document.querySelectorAll('.delete-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', async () => {
             const pId = btn.getAttribute('data-id');
             const player = state.players.find(p => p.id === pId);
             if (player) {
                 if (confirm(`Tem certeza que deseja excluir o jogador "${player.name}"?`)) {
                     state.players = state.players.filter(p => p.id !== pId);
                     savePlayersToStorage();
+                    await savePlayersToCloud(); // Sincroniza com a nuvem
                     renderPlayersTable();
                     updateSummaryStats();
+                    renderGalleryCards(); // Atualiza a galeria de cards
                 }
             }
         });
@@ -848,7 +855,48 @@ function copyTeamsToClipboard() {
 // ==========================================================================
 const BUCKET_URL = 'https://kvdb.io/peladapro_9fc2bfc2/wins';
 const TEAMS_BUCKET_URL = 'https://kvdb.io/peladapro_9fc2bfc2/current_teams';
+const PLAYERS_BUCKET_URL = 'https://kvdb.io/peladapro_9fc2bfc2/players';
 
+// Sincronização dos Jogadores (Cadastro, Notas e Presença)
+async function loadPlayersFromCloud() {
+    try {
+        const res = await fetch(PLAYERS_BUCKET_URL);
+        if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data) && data.length > 0) {
+                // Sincroniza localmente
+                state.players = data;
+                savePlayersToStorage();
+                
+                // Atualiza toda a interface associada
+                renderPlayersTable();
+                renderGalleryCards();
+                renderTotwTable();
+                renderTotwPodium();
+                updateSummaryStats();
+            }
+        } else if (res.status === 404 && state.isAdmin) {
+            await savePlayersToCloud();
+        }
+    } catch (e) {
+        console.warn("[Pelada PRO] Não foi possível carregar os jogadores da nuvem:", e);
+    }
+}
+
+async function savePlayersToCloud() {
+    if (!state.isAdmin) return; // Apenas administrador pode salvar na nuvem
+    try {
+        await fetch(PLAYERS_BUCKET_URL, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(state.players)
+        });
+    } catch (e) {
+        console.error("[Pelada PRO] Erro ao salvar os jogadores na nuvem:", e);
+    }
+}
+
+// Sincronização dos Times Sorteados
 async function loadTeamsFromCloud() {
     try {
         const res = await fetch(TEAMS_BUCKET_URL);
@@ -868,7 +916,10 @@ async function loadTeamsFromCloud() {
                 }
                 renderDrawnTeams();
                 updateDrawSummary();
+                updateConfirmButtonUI();
             }
+        } else if (res.status === 404 && state.isAdmin) {
+            await saveTeamsToCloud();
         }
     } catch (e) {
         console.warn("[Pelada PRO] Não foi possível carregar os times da nuvem:", e);
@@ -876,6 +927,7 @@ async function loadTeamsFromCloud() {
 }
 
 async function saveTeamsToCloud() {
+    if (!state.isAdmin) return; // Apenas administrador pode salvar na nuvem
     try {
         await fetch(TEAMS_BUCKET_URL, {
             method: 'PUT',
@@ -887,6 +939,7 @@ async function saveTeamsToCloud() {
     }
 }
 
+// Sincronização do Time da Semana
 async function loadTotwFromCloud() {
     try {
         const res = await fetch(BUCKET_URL);
@@ -904,16 +957,16 @@ async function loadTotwFromCloud() {
                 renderTotwTable();
                 renderTotwPodium();
             }
-        } else if (res.status === 404) {
-            // Se o bucket ainda não existe, cria-o enviando os dados locais
+        } else if (res.status === 404 && state.isAdmin) {
             await saveTotwToCloud();
         }
     } catch (e) {
-        console.warn("[Pelada PRO] Não foi possível sincronizar com a nuvem, usando dados locais:", e);
+        console.warn("[Pelada PRO] Não foi possível sincronizar com a nuvem:", e);
     }
 }
 
 async function saveTotwToCloud() {
+    if (!state.isAdmin) return; // Apenas administrador pode salvar na nuvem
     try {
         const data = {};
         state.players.forEach(p => {
@@ -1230,7 +1283,7 @@ function initEditModal() {
     }
 
     // Submeter formulário de edição
-    editForm.addEventListener('submit', (e) => {
+    editForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const id = document.getElementById('edit-player-id').value;
         const player = state.players.find(p => p.id === id);
@@ -1246,6 +1299,7 @@ function initEditModal() {
             player.rating = parseInt(editRatingRange.value);
 
             savePlayersToStorage();
+            await savePlayersToCloud(); // Sincroniza jogadores na nuvem
             
             // Recalcular médias se os times já foram sorteados
             if (state.drawnTeams && state.drawnTeams.length > 0) {
@@ -1264,10 +1318,12 @@ function initEditModal() {
                     }
                 });
                 saveTeamsToStorage();
+                await saveTeamsToCloud(); // Sincroniza times na nuvem
             }
 
             renderPlayersTable();
             updateSummaryStats();
+            renderGalleryCards(); // Atualiza os cards
             closeEditModal();
         }
     });
@@ -1331,8 +1387,10 @@ document.addEventListener('DOMContentLoaded', () => {
     updateAdminUI();
 
     // Sincronizar dados com a nuvem de forma assíncrona
-    loadTeamsFromCloud();
-    loadTotwFromCloud();
+    loadPlayersFromCloud().then(() => {
+        loadTeamsFromCloud();
+        loadTotwFromCloud();
+    });
 });
 
 // ==========================================================================

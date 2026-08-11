@@ -853,57 +853,38 @@ function copyTeamsToClipboard() {
 // ==========================================================================
 // ABA: RANKING - TIME DA SEMANA
 // ==========================================================================
-const BUCKET_URL = 'https://kvdb.io/peladapro_9fc2bfc2/wins';
-const TEAMS_BUCKET_URL = 'https://kvdb.io/peladapro_9fc2bfc2/current_teams';
-const PLAYERS_BUCKET_URL = 'https://kvdb.io/peladapro_9fc2bfc2/players';
+// ==========================================================================
+// CONFIGURAÇÃO DO BANCO DE DADOS VIA GOOGLE PLANILHAS (Apps Script)
+// ==========================================================================
+// Insira abaixo a URL gerada ao implantar o Google Apps Script como Web App:
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx57klN3v5_lSx0gWQjnuIy1hqyNuXq5cqrXgSdBjp6nOPw4bL6BLZOTm9BTZA0fxUx/exec'; 
 
-// Sincronização dos Jogadores (Cadastro, Notas e Presença)
+// Sincronização dos Jogadores e Times da Planilha Google
 async function loadPlayersFromCloud() {
+    if (!GOOGLE_SCRIPT_URL) return;
     try {
-        const res = await fetch(PLAYERS_BUCKET_URL);
+        const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=get`);
         if (res.ok) {
             const data = await res.json();
-            if (Array.isArray(data) && data.length > 0) {
-                // Sincroniza localmente
-                state.players = data;
+            
+            // Sincroniza Jogadores
+            if (data && Array.isArray(data.players) && data.players.length > 0) {
+                state.players = data.players;
                 savePlayersToStorage();
                 
-                // Atualiza toda a interface associada
                 renderPlayersTable();
                 renderGalleryCards();
                 renderTotwTable();
                 renderTotwPodium();
                 updateSummaryStats();
+            } else if (data && Array.isArray(data.players) && data.players.length === 0 && state.isAdmin) {
+                // Se a planilha estiver vazia e formos administrador, envia os dados locais para populá-la
+                await savePlayersToCloud();
             }
-        } else if (res.status === 404 && state.isAdmin) {
-            await savePlayersToCloud();
-        }
-    } catch (e) {
-        console.warn("[Pelada PRO] Não foi possível carregar os jogadores da nuvem:", e);
-    }
-}
-
-async function savePlayersToCloud() {
-    if (!state.isAdmin) return; // Apenas administrador pode salvar na nuvem
-    try {
-        await fetch(PLAYERS_BUCKET_URL, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(state.players)
-        });
-    } catch (e) {
-        console.error("[Pelada PRO] Erro ao salvar os jogadores na nuvem:", e);
-    }
-}
-
-// Sincronização dos Times Sorteados
-async function loadTeamsFromCloud() {
-    try {
-        const res = await fetch(TEAMS_BUCKET_URL);
-        if (res.ok) {
-            const data = await res.json();
-            if (Array.isArray(data)) {
-                state.drawnTeams = data;
+            
+            // Sincroniza Times
+            if (data && Array.isArray(data.teams)) {
+                state.drawnTeams = data.teams;
                 saveTeamsToStorage();
                 
                 const resultsContainer = document.getElementById('draw-results-container');
@@ -918,67 +899,45 @@ async function loadTeamsFromCloud() {
                 updateDrawSummary();
                 updateConfirmButtonUI();
             }
-        } else if (res.status === 404 && state.isAdmin) {
-            await saveTeamsToCloud();
         }
     } catch (e) {
-        console.warn("[Pelada PRO] Não foi possível carregar os times da nuvem:", e);
+        console.warn("[Pelada PRO] Não foi possível carregar os dados da Planilha Google:", e);
+    }
+}
+
+async function savePlayersToCloud() {
+    if (!GOOGLE_SCRIPT_URL) return;
+    if (!state.isAdmin) return; // Apenas administrador pode salvar
+    try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors', // Evita problemas de CORS no redirecionamento do Google
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                action: 'savePlayers',
+                players: state.players
+            })
+        });
+    } catch (e) {
+        console.error("[Pelada PRO] Erro ao salvar os jogadores na Planilha Google:", e);
     }
 }
 
 async function saveTeamsToCloud() {
-    if (!state.isAdmin) return; // Apenas administrador pode salvar na nuvem
+    if (!GOOGLE_SCRIPT_URL) return;
+    if (!state.isAdmin) return; // Apenas administrador pode salvar
     try {
-        await fetch(TEAMS_BUCKET_URL, {
-            method: 'PUT',
+        await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors', // Evita problemas de CORS no redirecionamento do Google
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(state.drawnTeams || [])
+            body: JSON.stringify({
+                action: 'saveTeams',
+                teams: state.drawnTeams || []
+            })
         });
     } catch (e) {
-        console.error("[Pelada PRO] Erro ao salvar os times na nuvem:", e);
-    }
-}
-
-// Sincronização do Time da Semana
-async function loadTotwFromCloud() {
-    try {
-        const res = await fetch(BUCKET_URL);
-        if (res.ok) {
-            const data = await res.json();
-            if (data && typeof data === 'object') {
-                state.players.forEach(p => {
-                    if (data[p.id] !== undefined) {
-                        p.totwWins = data[p.id];
-                    } else {
-                        p.totwWins = p.totwWins || 0;
-                    }
-                });
-                savePlayersToStorage();
-                renderTotwTable();
-                renderTotwPodium();
-            }
-        } else if (res.status === 404 && state.isAdmin) {
-            await saveTotwToCloud();
-        }
-    } catch (e) {
-        console.warn("[Pelada PRO] Não foi possível sincronizar com a nuvem:", e);
-    }
-}
-
-async function saveTotwToCloud() {
-    if (!state.isAdmin) return; // Apenas administrador pode salvar na nuvem
-    try {
-        const data = {};
-        state.players.forEach(p => {
-            data[p.id] = p.totwWins || 0;
-        });
-        await fetch(BUCKET_URL, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        });
-    } catch (e) {
-        console.error("[Pelada PRO] Erro ao salvar na nuvem:", e);
+        console.error("[Pelada PRO] Erro ao salvar os times na Planilha Google:", e);
     }
 }
 
@@ -1109,7 +1068,7 @@ function initStatsTab() {
                     p.totwWins = 0;
                 });
                 savePlayersToStorage();
-                await saveTotwToCloud();
+                await savePlayersToCloud(); // Salva na nuvem Firebase
                 renderTotwTable();
                 renderTotwPodium();
                 alert("Ranking redefinido com sucesso na nuvem!");
@@ -1148,7 +1107,7 @@ function initStatsTab() {
     }
 
     // Carrega do Cloud na inicialização da aba
-    loadTotwFromCloud();
+    loadPlayersFromCloud();
 }
 
 function renderTotwTable() {
@@ -1219,7 +1178,7 @@ function renderTotwTable() {
                 savePlayersToStorage();
                 renderTotwTable();
                 renderTotwPodium();
-                await saveTotwToCloud();
+                await savePlayersToCloud(); // Salva na nuvem Firebase
             });
 
             tr.querySelector('.dec-totw').addEventListener('click', async () => {
@@ -1228,7 +1187,7 @@ function renderTotwTable() {
                     savePlayersToStorage();
                     renderTotwTable();
                     renderTotwPodium();
-                    await saveTotwToCloud();
+                    await savePlayersToCloud(); // Salva na nuvem Firebase
                 }
             });
         }
@@ -1386,11 +1345,8 @@ document.addEventListener('DOMContentLoaded', () => {
     renderGalleryCards();
     updateAdminUI();
 
-    // Sincronizar dados com a nuvem de forma assíncrona
-    loadPlayersFromCloud().then(() => {
-        loadTeamsFromCloud();
-        loadTotwFromCloud();
-    });
+    // Sincronizar dados com a Planilha Google de forma assíncrona
+    loadPlayersFromCloud();
 });
 
 // ==========================================================================

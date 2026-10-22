@@ -121,38 +121,38 @@ async function loadManifest() {
 // Lista inicial de jogadores fornecida pelo usuário com notas e goleiros atualizados
 // Lista inicial de jogadores fornecida pelo usuário com notas e goleiros atualizados para a escala 0-100 (FIFA/FUT)
 const mockPlayers = [
-    { id: '1', name: "Arthur", rating: 67, position: "Meio-Campo", type: "Mensalista", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '2', name: "Bulau", rating: 55, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '3', name: "Custódio", rating: 61, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '4', name: "Diório", rating: 75, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '5', name: "Felipe", rating: 88, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '6', name: "Gabriel Oliveira", rating: 67, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '7', name: "Gersinho", rating: 81, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '8', name: "Heyler", rating: 69, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '9', name: "João Teles", rating: 94, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '10', name: "Kaka", rating: 72, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '11', name: "Lucas", rating: 63, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '12', name: "Max", rating: 65, position: "Meio-Campo", type: "Mensalista", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '13', name: "Nenem", rating: 86, position: "Meio-Campo", type: "Mensalista", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '14', name: "Novy", rating: 65, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '15', name: "Rodrigo", rating: 76, position: "Meio-Campo", type: "Mensalista", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '16', name: "Samuel", rating: 75, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '17', name: "Thiago", rating: 72, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '18', name: "Vitão", rating: 57, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '19', name: "Lobão", rating: 74, position: "Goleiro", type: "Mensalista", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '20', name: "Marcelo", rating: 74, position: "Goleiro", type: "Mensalista", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '21', name: "Magal", rating: 68, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '22', name: "Arthur cv Magal", rating: 70, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '23', name: "Bulasha", rating: 70, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '24', name: "Marcelo cv", rating: 80, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '25', name: "Thiaguinho cv", rating: 80, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '26', name: "Marquinhos cv", rating: 70, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '27', name: "leozinho cv Magal", rating: 70, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '28', name: "Alisson cv", rating: 74, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '29', name: "Yuri cv", rating: 70, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '30', name: "zebrinha cv", rating: 70, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '31', name: "Jesse", rating: 61, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false },
-    { id: '32', name: "Nereu cv", rating: 77, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false }
+    { id: '1', name: "Arthur", rating: 67, position: "Meio-Campo", type: "Mensalista", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 1 },
+    { id: '2', name: "Bulau", rating: 55, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 1 },
+    { id: '3', name: "Custódio", rating: 61, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 3 },
+    { id: '4', name: "Diório", rating: 75, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 2 },
+    { id: '5', name: "Felipe", rating: 88, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 3 },
+    { id: '6', name: "Gabriel Oliveira", rating: 67, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 1 },
+    { id: '7', name: "Gersinho", rating: 81, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 1 },
+    { id: '8', name: "Heyler", rating: 69, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 2 },
+    { id: '9', name: "João Teles", rating: 94, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 1 },
+    { id: '10', name: "Kaka", rating: 72, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 2 },
+    { id: '11', name: "Lucas", rating: 63, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 1 },
+    { id: '12', name: "Max", rating: 65, position: "Meio-Campo", type: "Mensalista", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 1 },
+    { id: '13', name: "Nenem", rating: 86, position: "Meio-Campo", type: "Mensalista", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 4 },
+    { id: '14', name: "Novy", rating: 65, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
+    { id: '15', name: "Rodrigo", rating: 76, position: "Meio-Campo", type: "Mensalista", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 1 },
+    { id: '16', name: "Samuel", rating: 75, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 3 },
+    { id: '17', name: "Thiago", rating: 72, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
+    { id: '18', name: "Vitão", rating: 57, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 3 },
+    { id: '19', name: "Lobão", rating: 74, position: "Goleiro", type: "Mensalista", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
+    { id: '20', name: "Marcelo", rating: 74, position: "Goleiro", type: "Mensalista", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
+    { id: '21', name: "Magal", rating: 68, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 3 },
+    { id: '22', name: "Arthur cv Magal", rating: 70, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
+    { id: '23', name: "Bulasha", rating: 70, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
+    { id: '24', name: "Marcelo cv", rating: 80, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
+    { id: '25', name: "Thiaguinho cv", rating: 80, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
+    { id: '26', name: "Marquinhos cv", rating: 70, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
+    { id: '27', name: "leozinho cv Magal", rating: 70, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
+    { id: '28', name: "Alisson cv", rating: 74, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
+    { id: '29', name: "Yuri cv", rating: 70, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
+    { id: '30', name: "zebrinha cv", rating: 70, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
+    { id: '31', name: "Jesse", rating: 61, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
+    { id: '32', name: "Nereu cv", rating: 77, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 }
 ];
 
 // Helper para obter a classe de crachá de nota (Ouro, Prata, Bronze) estilo FIFA
@@ -172,11 +172,11 @@ function initData() {
     const storedHistoryMeta = localStorage.getItem('pelada_history_metadata');
     const storedSavedStatus = localStorage.getItem('pelada_current_draw_saved');
 
-    // Força a atualização para a nova lista se a versão no navegador não for v11 (32 jogadores atualizados)
-    if (version !== 'v11') {
+    // Força a atualização para a nova lista se a versão no navegador não for v12 (vitórias TOTW sincronizadas)
+    if (version !== 'v12') {
         state.players = [...mockPlayers];
         savePlayersToStorage();
-        localStorage.setItem('pelada_version', 'v11');
+        localStorage.setItem('pelada_version', 'v12');
         localStorage.removeItem('pelada_teams'); // Limpa sorteios antigos incompatíveis
         state.history = {};
         state.historyMetadata = { totalDraws: 0 };

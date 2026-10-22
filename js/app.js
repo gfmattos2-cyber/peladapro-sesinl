@@ -854,16 +854,15 @@ function copyTeamsToClipboard() {
 // ABA: RANKING - TIME DA SEMANA
 // ==========================================================================
 // ==========================================================================
-// CONFIGURAÇÃO DO BANCO DE DADOS VIA GOOGLE PLANILHAS (Apps Script)
+// CONFIGURAÇÃO DO BANCO DE DADOS EM NUVEM (Cloudflare D1 + Worker API)
 // ==========================================================================
-// Insira abaixo a URL gerada ao implantar o Google Apps Script como Web App:
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx57klN3v5_lSx0gWQjnuIy1hqyNuXq5cqrXgSdBjp6nOPw4bL6BLZOTm9BTZA0fxUx/exec'; 
+const API_URL = 'https://pelada-pro-api.gfmattos.workers.dev'; 
 
-// Sincronização dos Jogadores e Times da Planilha Google
+// Sincronização dos Jogadores e Times via Cloudflare D1
 async function loadPlayersFromCloud() {
-    if (!GOOGLE_SCRIPT_URL) return;
+    if (!API_URL) return;
     try {
-        const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=get`);
+        const res = await fetch(API_URL);
         if (res.ok) {
             const data = await res.json();
             
@@ -878,7 +877,7 @@ async function loadPlayersFromCloud() {
                 renderTotwPodium();
                 updateSummaryStats();
             } else if (data && Array.isArray(data.players) && data.players.length === 0 && state.isAdmin) {
-                // Se a planilha estiver vazia e formos administrador, envia os dados locais para populá-la
+                // Se o banco estiver vazio e formos administrador, envia os dados locais para populá-lo
                 await savePlayersToCloud();
             }
             
@@ -901,43 +900,47 @@ async function loadPlayersFromCloud() {
             }
         }
     } catch (e) {
-        console.warn("[Pelada PRO] Não foi possível carregar os dados da Planilha Google:", e);
+        console.warn("[Pelada PRO] Não foi possível carregar os dados do Cloudflare D1:", e);
     }
 }
 
 async function savePlayersToCloud() {
-    if (!GOOGLE_SCRIPT_URL) return;
+    if (!API_URL) return;
     if (!state.isAdmin) return; // Apenas administrador pode salvar
     try {
-        await fetch(GOOGLE_SCRIPT_URL, {
+        const res = await fetch(API_URL, {
             method: 'POST',
-            mode: 'no-cors', // Evita problemas de CORS no redirecionamento do Google
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 action: 'savePlayers',
                 players: state.players
             })
         });
+        if (!res.ok) {
+            console.error("[Pelada PRO] Erro ao salvar jogadores no Cloudflare D1");
+        }
     } catch (e) {
-        console.error("[Pelada PRO] Erro ao salvar os jogadores na Planilha Google:", e);
+        console.error("[Pelada PRO] Erro ao salvar os jogadores no Cloudflare D1:", e);
     }
 }
 
 async function saveTeamsToCloud() {
-    if (!GOOGLE_SCRIPT_URL) return;
+    if (!API_URL) return;
     if (!state.isAdmin) return; // Apenas administrador pode salvar
     try {
-        await fetch(GOOGLE_SCRIPT_URL, {
+        const res = await fetch(API_URL, {
             method: 'POST',
-            mode: 'no-cors', // Evita problemas de CORS no redirecionamento do Google
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 action: 'saveTeams',
                 teams: state.drawnTeams || []
             })
         });
+        if (!res.ok) {
+            console.error("[Pelada PRO] Erro ao salvar times no Cloudflare D1");
+        }
     } catch (e) {
-        console.error("[Pelada PRO] Erro ao salvar os times na Planilha Google:", e);
+        console.error("[Pelada PRO] Erro ao salvar os times no Cloudflare D1:", e);
     }
 }
 
@@ -1351,30 +1354,30 @@ document.addEventListener('DOMContentLoaded', () => {
     renderGalleryCards();
     updateAdminUI();
 
-    // Listeners para os botões de nuvem do Google Planilhas
+    // Listeners para os botões de nuvem do Cloudflare D1
     const btnCloudPull = document.getElementById('btn-cloud-pull');
     const btnCloudPush = document.getElementById('btn-cloud-push');
     
     if (btnCloudPull) {
         btnCloudPull.addEventListener('click', async () => {
-            if (confirm("Deseja importar os dados da Planilha Google? Isso substituirá seus dados locais atuais.")) {
+            if (confirm("Deseja importar os dados da nuvem Cloudflare D1? Isso substituirá seus dados locais atuais.")) {
                 await loadPlayersFromCloud();
-                alert("Dados importados da Planilha Google com sucesso! 📊");
+                alert("Dados importados da nuvem Cloudflare D1 com sucesso! ⚡");
             }
         });
     }
     
     if (btnCloudPush) {
         btnCloudPush.addEventListener('click', async () => {
-            if (confirm("Deseja exportar seus dados locais para a Planilha Google? Isso substituirá as informações que estão lá.")) {
+            if (confirm("Deseja salvar seus dados locais na nuvem Cloudflare D1? Isso atualizará o banco de dados oficial.")) {
                 await savePlayersToCloud();
                 await saveTeamsToCloud();
-                alert("Dados exportados e salvos na Planilha Google com sucesso! 📊");
+                alert("Dados salvos com sucesso na nuvem Cloudflare D1! ⚡");
             }
         });
     }
 
-    // Sincronizar dados com a Planilha Google de forma assíncrona
+    // Sincronizar dados com o Cloudflare D1 de forma assíncrona
     loadPlayersFromCloud();
 });
 

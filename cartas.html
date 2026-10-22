@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria de Cards - Pelada PRO</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Estilo Principal -->
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .gallery-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            text-align: center;
+        }
+        .gallery-header {
+            margin-bottom: 3rem;
+        }
+        .gallery-header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+        .gallery-header h1 span {
+            color: var(--primary);
+        }
+        .gallery-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 2rem 1.5rem;
+            justify-items: center;
+            margin-top: 2rem;
+        }
+        /* Ajuste do card de imagem no grid */
+        .cards-grid .fut-card {
+            cursor: default;
+        }
+        .cards-grid .fut-card:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.2);
+            border-color: var(--primary);
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            transition: var(--transition);
+        }
+        .back-link:hover {
+            color: var(--primary-neon);
+            transform: translateX(-3px);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo">
+                <i class="fa-solid fa-circle-nodes logo-icon"></i>
+                <h1>PELADA<span>PRO</span></h1>
+            </div>
+            <nav class="app-nav">
+                <a href="index.html" class="nav-btn">
+                    <i class="fa-solid fa-house"></i> <span>Sorteador</span>
+                </a>
+            </nav>
+        </header>
+
+        <main class="app-main">
+            <div class="gallery-container">
+                <a href="index.html" class="back-link">
+                    <i class="fa-solid fa-arrow-left"></i> Voltar ao Organizador
+                </a>
+                
+                <div class="gallery-header">
+                    <h1>Galeria de <span>Cards</span></h1>
+                    <p>Confira os cards personalizados e notas estilo FIFA FUT de todos os jogadores da pelada.</p>
+                </div>
+
+                <div id="gallery-grid" class="cards-grid">
+                    <!-- Cards carregados via Javascript -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Carrega manifesto se existir -->
+    <script src="public/player-cards/v1/cards-manifest.v1.js" onerror="console.warn('Manifesto em JS não encontrado, tentando JSON...');"></script>
+    <script>
+        // Lista inicial de jogadores com as notas atualizadas (escala 0-100)
+        const players = [
+            { id: '9', name: "João Teles", rating: 94, position: "Meio-Campo" },
+            { id: '5', name: "Felipe", rating: 88, position: "Meio-Campo" },
+            { id: '13', name: "Nenem", rating: 86, position: "Meio-Campo" },
+            { id: '7', name: "Gersinho", rating: 81, position: "Meio-Campo" },
+            { id: '15', name: "Rodrigo", rating: 76, position: "Meio-Campo" },
+            { id: '4', name: "Diório", rating: 75, position: "Meio-Campo" },
+            { id: '16', name: "Samuel", rating: 75, position: "Meio-Campo" },
+            { id: '19', name: "Lobão", rating: 74, position: "Goleiro" },
+            { id: '20', name: "Marcelo", rating: 74, position: "Goleiro" },
+            { id: '17', name: "Thiago", rating: 72, position: "Meio-Campo" },
+            { id: '10', name: "Kaka", rating: 72, position: "Meio-Campo" },
+            { id: '8', name: "Heyler", rating: 69, position: "Meio-Campo" },
+            { id: '21', name: "Magal", rating: 68, position: "Meio-Campo" },
+            { id: '6', name: "Gabriel Oliveira", rating: 67, position: "Meio-Campo" },
+            { id: '1', name: "Arthur", rating: 67, position: "Meio-Campo" },
+            { id: '14', name: "Novy", rating: 65, position: "Meio-Campo" },
+            { id: '12', name: "Max", rating: 65, position: "Meio-Campo" },
+            { id: '11', name: "Lucas", rating: 63, position: "Meio-Campo" },
+            { id: '3', name: "Custódio", rating: 61, position: "Meio-Campo" },
+            { id: '18', name: "Vitão", rating: 57, position: "Meio-Campo" },
+            { id: '2', name: "Bulau", rating: 56, position: "Meio-Campo" }
+        ];
+
+        const playerCardMapping = {
+            '1': 'arthur-faria',
+            '2': 'bulau',
+            '3': 'custodio',
+            '4': 'gustavo-diorio',
+            '5': 'felipe-barrione',
+            '6': 'gabriel',
+            '7': 'gerson-melo',
+            '8': 'heyler',
+            '10': 'gabriel-kaka',
+            '11': 'lucas',
+            '12': 'max',
+            '13': 'dans',
+            '14': 'thiago-novy',
+            '15': 'rodrigo',
+            '16': 'samuel',
+            '17': 'thiago-faria',
+            '19': 'gabriel-lobao',
+            '20': 'marcelo',
+            '18': 'victor-junio'
+        };
+
+        function getPlayerCardEntry(playerId) {
+            // Mocks manuais de João Teles e Vitão (transparentes)
+            if (playerId === '9') {
+                return {
+                    playerId: "joao-teles",
+                    card: {
+                        webp: "/player-cards/v1/raw/joao-teles-trans.png",
+                        png: "/player-cards/v1/raw/joao-teles-trans.png"
+                    },
+                    ratingSlot: { xPercent: 0.165, yPercent: 0.16, widthPercent: 0.175, heightPercent: 0.095, textAlign: "center", fontWeight: 800, textColor: "#2a1e04", textShadow: "0 2px 4px rgba(246,234,208,0.65)" }
+                };
+            }
+            if (playerId === '18') {
+                return {
+                    playerId: "victor-junio",
+                    card: {
+                        webp: "/player-cards/v1/raw/victor-junio-trans.png",
+                        png: "/player-cards/v1/raw/victor-junio-trans.png"
+                    },
+                    ratingSlot: { xPercent: 0.165, yPercent: 0.16, widthPercent: 0.175, heightPercent: 0.095, textAlign: "center", fontWeight: 800, textColor: "#2a1e04", textShadow: "0 2px 4px rgba(246,234,208,0.65)" }
+                };
+            }
+
+            const manifest = window.manifestData || (window.manifestData = null);
+            if (!manifest || !manifest.players) return null;
+            const cardId = playerCardMapping[playerId];
+            if (!cardId) return null;
+            return manifest.players.find(p => p.playerId === cardId);
+        }
+
+        function getRatingBadgeClass(rating) {
+            if (rating >= 80) return 'rating-gold';
+            if (rating >= 60) return 'rating-silver';
+            return 'rating-bronze';
+        }
+
+        async function init() {
+            // Se o script global não carregou o manifestData, tenta carregar via fetch do JSON
+            if (!window.manifestData) {
+                try {
+                    const res = await fetch('public/player-cards/v1/cards-manifest.v1.json');
+                    if (res.ok) {
+                        window.manifestData = await res.json();
+                    }
+                } catch (e) {
+                    console.error("Falha ao carregar manifesto JSON:", e);
+                }
+            }
+
+            const grid = document.getElementById('gallery-grid');
+            grid.innerHTML = '';
+
+            players.forEach(player => {
+                const card = document.createElement('div');
+                card.className = 'fut-card';
+
+                let posAbbr = 'LIN';
+                if (player.position === 'Goleiro') posAbbr = 'GOL';
+                else if (player.position === 'Zagueiro') posAbbr = 'DF';
+                else if (player.position === 'Meio-Campo') posAbbr = 'MC';
+                else if (player.position === 'Atacante') posAbbr = 'ATA';
+
+                const cardEntry = getPlayerCardEntry(player.id);
+                if (cardEntry) {
+                    card.classList.add('has-image-card');
+                    card.innerHTML = `
+                        <div class="ppro-card">
+                            <img class="ppro-card__img" src="public${cardEntry.card.webp}" alt="${player.name}" onerror="this.src='public${cardEntry.card.png}'">
+                            <div class="ppro-card__rating" style="
+                                left: ${cardEntry.ratingSlot.xPercent * 100}%;
+                                top: ${cardEntry.ratingSlot.yPercent * 100}%;
+                                width: ${cardEntry.ratingSlot.widthPercent * 100}%;
+                                height: ${cardEntry.ratingSlot.heightPercent * 100}%;
+                                justify-content: ${cardEntry.ratingSlot.textAlign === 'left' ? 'flex-start' : cardEntry.ratingSlot.textAlign === 'right' ? 'flex-end' : 'center'};
+                                color: ${cardEntry.ratingSlot.textColor || '#2a1e04'};
+                                text-shadow: ${cardEntry.ratingSlot.textShadow || 'none'};
+                                font-weight: ${cardEntry.ratingSlot.fontWeight || '800'};
+                            ">${Math.round(player.rating)}</div>
+                        </div>
+                    `;
+                } else {
+                    const badgeClass = getRatingBadgeClass(player.rating);
+                    card.classList.add(badgeClass);
+                    card.innerHTML = `
+                        <div class="fut-badge-header" style="justify-content: center;">
+                            <span class="fut-pos">${posAbbr}</span>
+                        </div>
+                        <div class="fut-avatar">
+                            <i class="fa-solid fa-shirt"></i>
+                        </div>
+                        <div class="fut-name">${player.name.split(' ')[0]}</div>
+                    `;
+                }
+
+                grid.appendChild(card);
+            });
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+/* Card Pelada PRO — adapter vanilla. Responsivo; nota posicionada por % do card. */
+.ppro-card {
+  position: relative;
+  display: block;
+  margin: 0;
+  width: 100%;
+  max-width: 420px;
+  line-height: 0;
+  user-select: none;
+}
+.ppro-card:focus-visible {
+  outline: 3px solid #2b6cff;
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+.ppro-card__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* transparência real: nenhum fundo aplicado */
+}
+.ppro-card__rating {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  line-height: 1;
+  font-family: "Arial Narrow", "Roboto Condensed", "Oswald", Arial, sans-serif;
+  font-weight: 800;
+  color: #2a1e04;
+  text-shadow: 0 2px 4px rgba(246, 234, 208, 0.65);
+  letter-spacing: -0.02em;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.ppro-card__rating[hidden] { display: none; }

@@ -1,0 +1,203 @@
+{
+  "schemaVersion": "1.0.0",
+  "players": [
+    {
+      "id": "arthur-faria",
+      "name": "Arthur Faria",
+      "cardId": "arthur-faria",
+      "countryCode": "BR",
+      "isGoalkeeper": false,
+      "position": null,
+      "playerType": null,
+      "technicalRating": null,
+      "cardRating": null
+    },
+    {
+      "id": "bulau",
+      "name": "Bulau",
+      "cardId": "bulau",
+      "countryCode": "BR",
+      "isGoalkeeper": true,
+      "position": null,
+      "playerType": null,
+      "technicalRating": null,
+      "cardRating": null
+    },
+    {
+      "id": "gabriel-kaka",
+      "name": "Gabriel Kaka",
+      "cardId": "gabriel-kaka",
+      "countryCode": "BR",
+      "isGoalkeeper": false,
+      "position": null,
+      "playerType": null,
+      "technicalRating": null,
+      "cardRating": null
+    },
+    {
+      "id": "gabriel-lobao",
+      "name": "Gabriel Lobão",
+      "cardId": "gabriel-lobao",
+      "countryCode": "BR",
+      "isGoalkeeper": true,
+      "position": null,
+      "playerType": null,
+      "technicalRating": null,
+      "cardRating": null
+    },
+    {
+      "id": "gerson-melo",
+      "name": "Gerson Melo",
+      "cardId": "gerson-melo",
+      "countryCode": "BR",
+      "isGoalkeeper": false,
+      "position": null,
+      "playerType": null,
+      "technicalRating": null,
+      "cardRating": null
+    },
+    {
+      "id": "marcelo",
+      "name": "Marcelo",
+      "cardId": "marcelo",
+      "countryCode": "BR",
+      "isGoalkeeper": true,
+      "position": null,
+      "playerType": null,
+      "technicalRating": null,
+      "cardRating": null
+    },
+    {
+      "id": "rodrigo",
+      "name": "Rodrigo",
+      "cardId": "rodrigo",
+      "countryCode": "BR",
+      "isGoalkeeper": false,
+      "position": null,
+      "playerType": null,
+      "technicalRating": null,
+      "cardRating": null
+    },
+    {
+      "id": "samuel",
+      "name": "Samuel",
+      "cardId": "samuel",
+      "countryCode": "BR",
+      "isGoalkeeper": false,
+      "position": null,
+      "playerType": null,
+      "technicalRating": null,
+      "cardRating": null
+    },
+    {
+      "id": "thiago-faria",
+      "name": "Thiago Faria",
+      "cardId": "thiago-faria",
+      "countryCode": "BR",
+      "isGoalkeeper": false,
+      "position": null,
+      "playerType": null,
+      "technicalRating": null,
+      "cardRating": null
+    },
+    {
+      "id": "thiago-novy",
+      "name": "Thiago Novy",
+      "cardId": "thiago-novy",
+      "countryCode": "BR",
+      "isGoalkeeper": false,
+      "position": null,
+      "playerType": null,
+      "technicalRating": null,
+      "cardRating": null
+    },
+    {
+      "id": "custodio",
+      "name": "Custodio",
+      "cardId": "custodio",
+      "countryCode": "BR",
+      "isGoalkeeper": false,
+      "position": null,
+      "playerType": null,
+      "technicalRating": null,
+      "cardRating": null
+    },
+    {
+      "id": "dans",
+      "name": "Dans",
+      "cardId": "dans",
+      "countryCode": "BR",
+      "isGoalkeeper": false,
+      "position": null,
+      "playerType": null,
+      "technicalRating": null,
+      "cardRating": null
+    },
+    {
+      "id": "felipe-barrione",
+      "name": "Felipe Barrione",
+      "cardId": "felipe-barrione",
+      "countryCode": "BR",
+      "isGoalkeeper": false,
+      "position": null,
+      "playerType": null,
+      "technicalRating": null,
+      "cardRating": null
+    },
+    {
+      "id": "gabriel",
+      "name": "Gabriel",
+      "cardId": "gabriel",
+      "countryCode": "BR",
+      "isGoalkeeper": false,
+      "position": null,
+      "playerType": null,
+      "technicalRating": null,
+      "cardRating": null
+    },
+    {
+      "id": "gustavo-diorio",
+      "name": "Gustavo Diorio",
+      "cardId": "gustavo-diorio",
+      "countryCode": "BR",
+      "isGoalkeeper": false,
+      "position": null,
+      "playerType": null,
+      "technicalRating": null,
+      "cardRating": null
+    },
+    {
+      "id": "heyler",
+      "name": "Heyler",
+      "cardId": "heyler",
+      "countryCode": "BR",
+      "isGoalkeeper": false,
+      "position": null,
+      "playerType": null,
+      "technicalRating": null,
+      "cardRating": null
+    },
+    {
+      "id": "lucas",
+      "name": "Lucas",
+      "cardId": "lucas",
+      "countryCode": "BR",
+      "isGoalkeeper": false,
+      "position": null,
+      "playerType": null,
+      "technicalRating": null,
+      "cardRating": null
+    },
+    {
+      "id": "max",
+      "name": "Max",
+      "cardId": "max",
+      "countryCode": "BR",
+      "isGoalkeeper": false,
+      "position": null,
+      "playerType": null,
+      "technicalRating": null,
+      "cardRating": null
+    }
+  ]
+}

@@ -1,0 +1,416 @@
+{
+  "arthur-faria": {
+    "slot_vs_flag_collision": false,
+    "slot_inside_card_border": true,
+    "slot_over_gold_template": true,
+    "flag_bbox": {
+      "top": 0.32434254888739045,
+      "bottom": 0.3877275792312879,
+      "left": 0.17153628652214892,
+      "right": 0.3166823751178134
+    },
+    "slot_bbox_pct": {
+      "x0": 0.165,
+      "y0": 0.16,
+      "x1": 0.33999999999999997,
+      "y1": 0.255
+    },
+    "mean_rgb": [
+      233.6,
+      194.0,
+      104.3
+    ],
+    "ok": true
+  },
+  "bulau": {
+    "slot_vs_flag_collision": false,
+    "slot_inside_card_border": true,
+    "slot_over_gold_template": true,
+    "flag_bbox": {
+      "top": 0.2939986513823331,
+      "bottom": 0.35468644639244773,
+      "left": 0.14797360980207352,
+      "right": 0.27992459943449577
+    },
+    "slot_bbox_pct": {
+      "x0": 0.165,
+      "y0": 0.16,
+      "x1": 0.33999999999999997,
+      "y1": 0.255
+    },
+    "mean_rgb": [
+      231.2,
+      190.9,
+      102.6
+    ],
+    "ok": true
+  },
+  "gabriel-kaka": {
+    "slot_vs_flag_collision": false,
+    "slot_inside_card_border": true,
+    "slot_over_gold_template": true,
+    "flag_bbox": {
+      "top": 0.35873229939312207,
+      "bottom": 0.41537424140256235,
+      "left": 0.18001885014137606,
+      "right": 0.295004712535344
+    },
+    "slot_bbox_pct": {
+      "x0": 0.165,
+      "y0": 0.16,
+      "x1": 0.33999999999999997,
+      "y1": 0.255
+    },
+    "mean_rgb": [
+      238.2,
+      200.9,
+      110.4
+    ],
+    "ok": true
+  },
+  "gabriel-lobao": {
+    "slot_vs_flag_collision": false,
+    "slot_inside_card_border": true,
+    "slot_over_gold_template": true,
+    "flag_bbox": {
+      "top": 0.3128792987188132,
+      "bottom": 0.37086985839514497,
+      "left": 0.1649387370405278,
+      "right": 0.29123468426013194
+    },
+    "slot_bbox_pct": {
+      "x0": 0.165,
+      "y0": 0.16,
+      "x1": 0.33999999999999997,
+      "y1": 0.255
+    },
+    "mean_rgb": [
+      240.3,
+      204.1,
+      110.4
+    ],
+    "ok": true
+  },
+  "gerson-melo": {
+    "slot_vs_flag_collision": false,
+    "slot_inside_card_border": true,
+    "slot_over_gold_template": true,
+    "flag_bbox": {
+      "top": 0.33648010788941335,
+      "bottom": 0.39109912339851655,
+      "left": 0.16588124410933083,
+      "right": 0.28086710650329877
+    },
+    "slot_bbox_pct": {
+      "x0": 0.165,
+      "y0": 0.16,
+      "x1": 0.33999999999999997,
+      "y1": 0.255
+    },
+    "mean_rgb": [
+      233.1,
+      196.6,
+      105.8
+    ],
+    "ok": true
+  },
+  "marcelo": {
+    "slot_vs_flag_collision": false,
+    "slot_inside_card_border": true,
+    "slot_over_gold_template": true,
+    "flag_bbox": {
+      "top": 0.2818610923803102,
+      "bottom": 0.34389750505731626,
+      "left": 0.16022620169651272,
+      "right": 0.2997172478793591
+    },
+    "slot_bbox_pct": {
+      "x0": 0.165,
+      "y0": 0.16,
+      "x1": 0.33999999999999997,
+      "y1": 0.255
+    },
+    "mean_rgb": [
+      235.0,
+      199.7,
+      112.8
+    ],
+    "ok": true
+  },
+  "rodrigo": {
+    "slot_vs_flag_collision": false,
+    "slot_inside_card_border": true,
+    "slot_over_gold_template": true,
+    "flag_bbox": {
+      "top": 0.33243425488873907,
+      "bottom": 0.3857046527309508,
+      "left": 0.18001885014137606,
+      "right": 0.293119698397738
+    },
+    "slot_bbox_pct": {
+      "x0": 0.165,
+      "y0": 0.16,
+      "x1": 0.33999999999999997,
+      "y1": 0.255
+    },
+    "mean_rgb": [
+      234.9,
+      195.8,
+      108.2
+    ],
+    "ok": true
+  },
+  "samuel": {
+    "slot_vs_flag_collision": false,
+    "slot_inside_card_border": true,
+    "slot_over_gold_template": true,
+    "flag_bbox": {
+      "top": 0.3310856372218476,
+      "bottom": 0.39514497639919083,
+      "left": 0.17342130065975495,
+      "right": 0.31291234684260133
+    },
+    "slot_bbox_pct": {
+      "x0": 0.165,
+      "y0": 0.16,
+      "x1": 0.33999999999999997,
+      "y1": 0.255
+    },
+    "mean_rgb": [
+      237.7,
+      200.3,
+      106.6
+    ],
+    "ok": true
+  },
+  "thiago-faria": {
+    "slot_vs_flag_collision": false,
+    "slot_inside_card_border": true,
+    "slot_over_gold_template": true,
+    "flag_bbox": {
+      "top": 0.33041132838840187,
+      "bottom": 0.38907619689817935,
+      "left": 0.1583411875589067,
+      "right": 0.2865221489161169
+    },
+    "slot_bbox_pct": {
+      "x0": 0.165,
+      "y0": 0.16,
+      "x1": 0.33999999999999997,
+      "y1": 0.255
+    },
+    "mean_rgb": [
+      245.0,
+      209.1,
+      120.9
+    ],
+    "ok": true
+  },
+  "thiago-novy": {
+    "slot_vs_flag_collision": false,
+    "slot_inside_card_border": true,
+    "slot_over_gold_template": true,
+    "flag_bbox": {
+      "top": 0.28792987188132163,
+      "bottom": 0.34457181389076197,
+      "left": 0.16776625824693686,
+      "right": 0.2874646559849199
+    },
+    "slot_bbox_pct": {
+      "x0": 0.165,
+      "y0": 0.16,
+      "x1": 0.33999999999999997,
+      "y1": 0.255
+    },
+    "mean_rgb": [
+      243.9,
+      205.4,
+      111.9
+    ],
+    "ok": true
+  },
+  "custodio": {
+    "slot_vs_flag_collision": false,
+    "slot_inside_card_border": true,
+    "slot_over_gold_template": true,
+    "flag_bbox": {
+      "top": 0.3256911665542819,
+      "bottom": 0.3796358732299393,
+      "left": 0.18473138548539114,
+      "right": 0.295004712535344
+    },
+    "slot_bbox_pct": {
+      "x0": 0.165,
+      "y0": 0.16,
+      "x1": 0.33999999999999997,
+      "y1": 0.255
+    },
+    "mean_rgb": [
+      234.7,
+      192.1,
+      96.2
+    ],
+    "ok": true
+  },
+  "dans": {
+    "slot_vs_flag_collision": false,
+    "slot_inside_card_border": true,
+    "slot_over_gold_template": true,
+    "flag_bbox": {
+      "top": 0.3337828725556305,
+      "bottom": 0.38840188806473364,
+      "left": 0.17907634307257306,
+      "right": 0.293119698397738
+    },
+    "slot_bbox_pct": {
+      "x0": 0.165,
+      "y0": 0.16,
+      "x1": 0.33999999999999997,
+      "y1": 0.255
+    },
+    "mean_rgb": [
+      239.4,
+      194.7,
+      98.3
+    ],
+    "ok": true
+  },
+  "felipe-barrione": {
+    "slot_vs_flag_collision": false,
+    "slot_inside_card_border": true,
+    "slot_over_gold_template": true,
+    "flag_bbox": {
+      "top": 0.3263654753877276,
+      "bottom": 0.3789615643964936,
+      "left": 0.1941564561734213,
+      "right": 0.30348727615457116
+    },
+    "slot_bbox_pct": {
+      "x0": 0.165,
+      "y0": 0.16,
+      "x1": 0.33999999999999997,
+      "y1": 0.255
+    },
+    "mean_rgb": [
+      236.6,
+      195.7,
+      102.7
+    ],
+    "ok": true
+  },
+  "gabriel": {
+    "slot_vs_flag_collision": false,
+    "slot_inside_card_border": true,
+    "slot_over_gold_template": true,
+    "flag_bbox": {
+      "top": 0.3317599460552933,
+      "bottom": 0.3857046527309508,
+      "left": 0.17813383600377003,
+      "right": 0.29029217719132894
+    },
+    "slot_bbox_pct": {
+      "x0": 0.165,
+      "y0": 0.16,
+      "x1": 0.33999999999999997,
+      "y1": 0.255
+    },
+    "mean_rgb": [
+      235.0,
+      193.6,
+      98.6
+    ],
+    "ok": true
+  },
+  "gustavo-diorio": {
+    "slot_vs_flag_collision": false,
+    "slot_inside_card_border": true,
+    "slot_over_gold_template": true,
+    "flag_bbox": {
+      "top": 0.3331085637221848,
+      "bottom": 0.3870532703978422,
+      "left": 0.18473138548539114,
+      "right": 0.29783223374175305
+    },
+    "slot_bbox_pct": {
+      "x0": 0.165,
+      "y0": 0.16,
+      "x1": 0.33999999999999997,
+      "y1": 0.255
+    },
+    "mean_rgb": [
+      235.6,
+      193.7,
+      99.3
+    ],
+    "ok": true
+  },
+  "heyler": {
+    "slot_vs_flag_collision": false,
+    "slot_inside_card_border": true,
+    "slot_over_gold_template": true,
+    "flag_bbox": {
+      "top": 0.33715441672285906,
+      "bottom": 0.39177343223196226,
+      "left": 0.18473138548539114,
+      "right": 0.29783223374175305
+    },
+    "slot_bbox_pct": {
+      "x0": 0.165,
+      "y0": 0.16,
+      "x1": 0.33999999999999997,
+      "y1": 0.255
+    },
+    "mean_rgb": [
+      207.3,
+      157.1,
+      100.5
+    ],
+    "ok": true
+  },
+  "lucas": {
+    "slot_vs_flag_collision": false,
+    "slot_inside_card_border": true,
+    "slot_over_gold_template": true,
+    "flag_bbox": {
+      "top": 0.3344571813890762,
+      "bottom": 0.38840188806473364,
+      "left": 0.18473138548539114,
+      "right": 0.29594721960414705
+    },
+    "slot_bbox_pct": {
+      "x0": 0.165,
+      "y0": 0.16,
+      "x1": 0.33999999999999997,
+      "y1": 0.255
+    },
+    "mean_rgb": [
+      237.8,
+      195.7,
+      95.9
+    ],
+    "ok": true
+  },
+  "max": {
+    "slot_vs_flag_collision": false,
+    "slot_inside_card_border": true,
+    "slot_over_gold_template": true,
+    "flag_bbox": {
+      "top": 0.3317599460552933,
+      "bottom": 0.380310182063385,
+      "left": 0.22148916116870876,
+      "right": 0.32139491046182844
+    },
+    "slot_bbox_pct": {
+      "x0": 0.165,
+      "y0": 0.16,
+      "x1": 0.33999999999999997,
+      "y1": 0.255
+    },
+    "mean_rgb": [
+      228.3,
+      184.1,
+      116.8
+    ],
+    "ok": true
+  }
+}

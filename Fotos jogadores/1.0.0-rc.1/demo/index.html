@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pelada PRO — Demo de Cards (handoff 1.0.0-rc.1)</title>
+  <link rel="stylesheet" href="../adapters/vanilla/player-card.css" />
+  <link rel="stylesheet" href="demo.css" />
+</head>
+<body>
+  <header>
+    <h1>Pelada PRO — Cards (demo estático)</h1>
+    <p class="hint">Sirva a pasta do pacote e abra <code>/demo/</code>:
+      <code>python -m http.server</code>. A nota é dinâmica; a imagem-base nunca muda.</p>
+  </header>
+
+  <main>
+    <section class="controls" aria-label="Controles">
+      <label>Jogador
+        <select id="player"></select>
+      </label>
+      <label>Nota (1–5)
+        <input id="rating" type="number" min="1" max="5" step="0.1" value="4.3" />
+      </label>
+      <label class="chk"><input id="show" type="checkbox" checked /> Mostrar nota</label>
+      <label class="chk"><input id="webp" type="checkbox" checked /> Preferir WebP</label>
+      <label>Fundo (teste de transparência)
+        <select id="bg">
+          <option value="checker">xadrez</option>
+          <option value="#ffffff">branco</option>
+          <option value="#101010">preto</option>
+          <option value="#808080">cinza</option>
+          <option value="#1e8c3c">verde</option>
+        </select>
+      </label>
+      <p id="err" class="err" role="alert"></p>
+    </section>
+
+    <section class="stage">
+      <div id="card-host" class="host"></div>
+      <aside class="meta">
+        <h2 id="meta-name"></h2>
+        <dl id="meta"></dl>
+        <h3>Rating slot (percentuais)</h3>
+        <pre id="slot"></pre>
+      </aside>
+    </section>
+
+    <section>
+      <h2>Todos os jogadores (<span id="count">0</span>)</h2>
+      <div id="grid" class="grid"></div>
+    </section>
+  </main>
+
+  <script type="module" src="demo.js"></script>
+</body>
+</html>

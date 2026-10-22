@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "1.0.0",
+  "ratingContractVersion": "1.0.0",
+  "note": "Coordenadas percentuais das dimensões da carta. Nota dinâmica no app.",
+  "flagTopMinPercent": 0.28,
+  "slot": {
+    "xPercent": 0.165,
+    "yPercent": 0.16,
+    "widthPercent": 0.175,
+    "heightPercent": 0.095,
+    "textAlign": "center",
+    "fontSizePercent": 0.07,
+    "fontFamilyFallback": "'Arial Narrow', 'Roboto Condensed', 'Oswald', Arial, sans-serif",
+    "fontWeight": 800,
+    "textColor": "#2a1e04",
+    "textShadow": "0 2px 4px rgba(246,234,208,0.65)",
+    "maxCharacters": 4,
+    "displayMode": "raw-one-decimal",
+    "sourceScaleMin": 1,
+    "sourceScaleMax": 5,
+    "decimalPlaces": 1,
+    "locale": "pt-BR"
+  },
+  "ratingModel": {
+    "technicalRating": {
+      "value": null,
+      "scale": {
+        "min": 1,
+        "max": 5
+      }
+    },
+    "cardRating": {
+      "displayValue": null,
+      "displayMode": "raw-one-decimal",
+      "formulaVersion": null
+    },
+    "legacyOverallRating": null
+  }
+}

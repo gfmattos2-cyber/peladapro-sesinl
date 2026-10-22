@@ -1,0 +1,96 @@
+{
+  "schemaVersion": "1.0.0",
+  "note": "aliases apenas para MIGRAÇÃO; nunca resolver ambíguo automaticamente",
+  "aliases": {
+    "arthur faria": {
+      "playerId": "arthur-faria",
+      "status": "unique"
+    },
+    "bulau": {
+      "playerId": "bulau",
+      "status": "unique"
+    },
+    "custodio": {
+      "playerId": "custodio",
+      "status": "unique"
+    },
+    "dans": {
+      "playerId": "dans",
+      "status": "unique"
+    },
+    "felipe barrione": {
+      "playerId": "felipe-barrione",
+      "status": "unique"
+    },
+    "gabriel": {
+      "playerId": "gabriel",
+      "status": "unique"
+    },
+    "gabriel kaka": {
+      "playerId": "gabriel-kaka",
+      "status": "unique"
+    },
+    "gabriel lobao": {
+      "playerId": "gabriel-lobao",
+      "status": "unique"
+    },
+    "gerson melo": {
+      "playerId": "gerson-melo",
+      "status": "unique"
+    },
+    "gustavo diorio": {
+      "playerId": "gustavo-diorio",
+      "status": "unique"
+    },
+    "heyler": {
+      "playerId": "heyler",
+      "status": "unique"
+    },
+    "lucas": {
+      "playerId": "lucas",
+      "status": "unique"
+    },
+    "marcelo": {
+      "playerId": "marcelo",
+      "status": "unique"
+    },
+    "marcelo goleiro": {
+      "playerId": "marcelo",
+      "status": "unique"
+    },
+    "max": {
+      "playerId": "max",
+      "status": "unique"
+    },
+    "rodrigo": {
+      "playerId": "rodrigo",
+      "status": "unique"
+    },
+    "samuel": {
+      "playerId": "samuel",
+      "status": "unique"
+    },
+    "thiago faria": {
+      "playerId": "thiago-faria",
+      "status": "unique"
+    },
+    "thiago novy": {
+      "playerId": "thiago-novy",
+      "status": "unique"
+    },
+    "thiago": {
+      "status": "ambiguous",
+      "candidates": [
+        "thiago-faria",
+        "thiago-novy"
+      ]
+    },
+    "faria": {
+      "status": "ambiguous",
+      "candidates": [
+        "arthur-faria",
+        "thiago-faria"
+      ]
+    }
+  }
+}

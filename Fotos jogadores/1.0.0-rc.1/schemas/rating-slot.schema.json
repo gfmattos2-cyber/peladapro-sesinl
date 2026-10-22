@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "peladapro/rating-slot.schema.json",
+  "title": "PlayerCardRatingSlot",
+  "type": "object",
+  "required": ["schemaVersion", "slot", "ratingModel"],
+  "properties": {
+    "schemaVersion": { "type": "string" },
+    "ratingContractVersion": { "type": "string" },
+    "flagTopMinPercent": { "type": "number" },
+    "slot": {
+      "type": "object",
+      "required": ["xPercent", "yPercent", "widthPercent", "heightPercent", "textAlign",
+        "fontSizePercent", "displayMode", "sourceScaleMin", "sourceScaleMax", "decimalPlaces", "locale"],
+      "properties": {
+        "xPercent": { "type": "number", "minimum": 0, "maximum": 1 },
+        "yPercent": { "type": "number", "minimum": 0, "maximum": 1 },
+        "widthPercent": { "type": "number", "minimum": 0, "maximum": 1 },
+        "heightPercent": { "type": "number", "minimum": 0, "maximum": 1 },
+        "textAlign": { "type": "string" },
+        "fontSizePercent": { "type": "number" },
+        "fontFamilyFallback": { "type": "string" },
+        "fontWeight": { "type": ["integer", "string"] },
+        "textColor": { "type": "string" },
+        "textShadow": { "type": "string" },
+        "maxCharacters": { "type": "integer" },
+        "displayMode": { "type": "string", "enum": ["raw-one-decimal"] },
+        "sourceScaleMin": { "type": "number" },
+        "sourceScaleMax": { "type": "number" },
+        "decimalPlaces": { "type": "integer" },
+        "locale": { "type": "string" }
+      }
+    },
+    "ratingModel": {
+      "type": "object",
+      "required": ["technicalRating", "cardRating", "legacyOverallRating"],
+      "properties": {
+        "technicalRating": {
+          "type": "object",
+          "properties": {
+            "value": { "type": ["number", "null"] },
+            "scale": {
+              "type": "object",
+              "properties": { "min": { "type": "number" }, "max": { "type": "number" } }
+            }
+          }
+        },
+        "cardRating": {
+          "type": "object",
+          "properties": {
+            "displayValue": { "type": ["string", "number", "null"] },
+            "displayMode": { "type": "string" },
+            "formulaVersion": { "type": ["string", "null"] }
+          }
+        },
+        "legacyOverallRating": { "type": ["integer", "null"] }
+      }
+    }
+  }
+}

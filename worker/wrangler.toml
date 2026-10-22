@@ -1,0 +1,8 @@
+name = "pelada-pro-api"
+main = "src/index.js"
+compatibility_date = "2025-02-14"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "pelada-pro-db"
+database_id = "11de7387-fde7-49c6-b9c5-b82a021654cf"

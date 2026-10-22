@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "1.0.0",
+  "snapshotId": "pelada-2026-07-08",
+  "ratingScale": { "min": 1, "max": 5 },
+  "players": [
+    { "playerId": "arthur-faria", "rating": 4.3 },
+    { "playerId": "bulau", "rating": 3.8 },
+    { "playerId": "rodrigo", "rating": 5.0 }
+  ]
+}

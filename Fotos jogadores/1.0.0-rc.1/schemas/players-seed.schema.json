@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "peladapro/players-seed.schema.json",
+  "title": "PlayersSeed",
+  "type": "object",
+  "required": ["schemaVersion", "players"],
+  "properties": {
+    "schemaVersion": { "type": "string" },
+    "players": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "cardId", "isGoalkeeper"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "name": { "type": "string" },
+          "cardId": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "countryCode": { "type": "string" },
+          "isGoalkeeper": { "type": "boolean" },
+          "position": { "type": ["string", "null"] },
+          "playerType": { "type": ["string", "null"] },
+          "technicalRating": { "type": ["number", "null"] },
+          "cardRating": { "type": ["number", "null"] }
+        }
+      }
+    }
+  }
+}

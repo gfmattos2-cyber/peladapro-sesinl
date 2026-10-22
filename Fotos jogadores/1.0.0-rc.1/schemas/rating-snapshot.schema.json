@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "peladapro/rating-snapshot.schema.json",
+  "title": "RatingSnapshot",
+  "type": "object",
+  "required": ["schemaVersion", "snapshotId", "ratingScale", "players"],
+  "properties": {
+    "schemaVersion": { "type": "string" },
+    "snapshotId": { "type": "string", "pattern": "^[A-Za-z0-9._-]+$" },
+    "ratingScale": {
+      "type": "object",
+      "required": ["min", "max"],
+      "properties": { "min": { "type": "number" }, "max": { "type": "number" } }
+    },
+    "players": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["playerId", "rating"],
+        "properties": {
+          "playerId": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "rating": { "type": "number" }
+        }
+      }
+    }
+  }
+}

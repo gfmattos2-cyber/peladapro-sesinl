@@ -22,12 +22,12 @@ function criarFormularioPelada() {
       .setCollectEmail(false)             // Garante o anonimato (não coleta e-mails)
       .setLimitOneResponsePerUser(false);  // Se quiser limitar a 1 voto por pessoa, altere para true (exigirá login do Google)
   
-  // Lista dos 27 atletas da votação (21 mensalistas + 6 convidados)
+  // Lista dos 27 atletas da votação (21 mensalistas + 6 convidados com identificador)
   var jogadores = [
-    "Alisson",
+    "Alisson (convidado)",
     "Arthur",
     "Bulau",
-    "Bulasha",
+    "Bulasha (convidado)",
     "Custódio",
     "Diório",
     "Felipe",
@@ -36,7 +36,7 @@ function criarFormularioPelada() {
     "Heyler",
     "João Teles",
     "Kaka",
-    "Leozinho",
+    "Leozinho (convidado)",
     "Lobão (Goleiro)",
     "Lucas",
     "Magal",
@@ -47,10 +47,10 @@ function criarFormularioPelada() {
     "Rodrigo",
     "Samuel",
     "Thiago",
-    "Thiaguinho",
+    "Thiaguinho (convidado)",
     "Vitão",
-    "Yuri",
-    "Zebrinha"
+    "Yuri (convidado)",
+    "Zebrinha (convidado)"
   ];
   
   // Cria uma pergunta de escala linear (0 a 10) para cada jogador

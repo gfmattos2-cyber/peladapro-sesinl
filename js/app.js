@@ -38,11 +38,33 @@ const playerCardMapping = {
     '17': 'thiago-faria',      // Thiago
     '19': 'gabriel-lobao',     // Lobão
     '20': 'marcelo',           // Marcelo
-    '18': 'victor-junio'       // Vitão -> Victor Junio (confirmado pelo usuário)
+    '18': 'victor-junio',      // Vitão -> Victor Junio (confirmado pelo usuário)
+    '21': 'magal'              // Magal
 };
 
 function getPlayerCardEntry(playerId) {
-    // Se for João Teles (id '9') ou Vitão (id '18'), retorna entrada mockada apontando para a foto inteira (que já é o card FUT com fundo transparente)
+    // Se for João Teles (id '9'), Vitão (id '18') ou Magal (id '21'), retorna entrada mockada apontando para a foto inteira (que já é o card FUT com fundo transparente)
+    if (playerId === '21' || playerId === 'magal') {
+        return {
+            playerId: "magal",
+            displayName: "Magal",
+            card: {
+                webp: "/player-cards/v1/raw/magal-card.png",
+                png: "/player-cards/v1/raw/magal-card.png",
+                thumbnail: "/player-cards/v1/thumbnails/magal.png"
+            },
+            ratingSlot: {
+                xPercent: 0.165,
+                yPercent: 0.16,
+                widthPercent: 0.175,
+                heightPercent: 0.095,
+                textAlign: "center",
+                fontWeight: 800,
+                textColor: "#2a1e04",
+                textShadow: "0 2px 4px rgba(246,234,208,0.65)"
+            }
+        };
+    }
     if (playerId === '9') {
         return {
             playerId: "joao-teles",
@@ -93,6 +115,9 @@ function getPlayerCardEntry(playerId) {
 }
 
 function getPlayerThumbnail(playerId) {
+    if (playerId === '21' || playerId === 'magal') {
+        return `public/player-cards/v1/thumbnails/magal.png`;
+    }
     const cardEntry = getPlayerCardEntry(playerId);
     if (cardEntry) {
         return `public${cardEntry.card.thumbnail}`;

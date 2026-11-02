@@ -145,11 +145,22 @@
             '17': 'thiago-faria',
             '19': 'gabriel-lobao',
             '20': 'marcelo',
-            '18': 'victor-junio'
+            '18': 'victor-junio',
+            '21': 'magal'
         };
 
         function getPlayerCardEntry(playerId) {
-            // Mocks manuais de João Teles e Vitão (transparentes)
+            // Mocks manuais de João Teles, Vitão e Magal (transparentes)
+            if (playerId === '21') {
+                return {
+                    playerId: "magal",
+                    card: {
+                        webp: "/player-cards/v1/raw/magal-card.png",
+                        png: "/player-cards/v1/raw/magal-card.png"
+                    },
+                    ratingSlot: { xPercent: 0.165, yPercent: 0.16, widthPercent: 0.175, heightPercent: 0.095, textAlign: "center", fontWeight: 800, textColor: "#2a1e04", textShadow: "0 2px 4px rgba(246,234,208,0.65)" }
+                };
+            }
             if (playerId === '9') {
                 return {
                     playerId: "joao-teles",

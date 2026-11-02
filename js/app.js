@@ -1047,8 +1047,11 @@ function renderGalleryCards() {
     if (!grid) return;
     grid.innerHTML = '';
 
-    // Ordenar todos os jogadores por nota (decrescente)
-    const sorted = [...state.players].sort((a, b) => b.rating - a.rating);
+    // Filtrar exclusivamente mensalistas para a aba de cards
+    const mensalistas = state.players.filter(p => (p.type || '').trim().toLowerCase() === 'mensalista');
+
+    // Ordenar os mensalistas por nota (decrescente)
+    const sorted = [...mensalistas].sort((a, b) => b.rating - a.rating);
 
     if (sorted.length === 0) {
         grid.innerHTML = `<div style="text-align: center; color: var(--text-secondary); width: 100%; padding: 2rem;">Nenhum card disponível. Cadastre jogadores primeiro!</div>`;

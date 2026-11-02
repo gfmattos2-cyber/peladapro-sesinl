@@ -167,17 +167,17 @@ const mockPlayers = [
     { id: '19', name: "Lobão", rating: 74, position: "Goleiro", type: "Mensalista", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
     { id: '20', name: "Marcelo", rating: 74, position: "Goleiro", type: "Mensalista", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
     { id: '21', name: "Magal", rating: 68, position: "Meio-Campo", type: "Mensalista", active: true, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 3 },
-    { id: '22', name: "Arthur cv Magal", rating: 70, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
+    { id: '22', name: "Arthur (cv)", rating: 70, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
     { id: '23', name: "Bulasha", rating: 70, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
-    { id: '24', name: "Marcelo cv", rating: 80, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
-    { id: '25', name: "Thiaguinho cv", rating: 80, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
-    { id: '26', name: "Marquinhos cv", rating: 70, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
-    { id: '27', name: "leozinho cv Magal", rating: 70, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
-    { id: '28', name: "Alisson cv", rating: 74, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
-    { id: '29', name: "Yuri cv", rating: 70, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
-    { id: '30', name: "zebrinha cv", rating: 70, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
+    { id: '24', name: "Marcelo", rating: 80, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
+    { id: '25', name: "Thiaguinho", rating: 80, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
+    { id: '26', name: "Marquinhos", rating: 70, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
+    { id: '27', name: "Leozinho", rating: 70, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
+    { id: '28', name: "Alisson", rating: 74, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
+    { id: '29', name: "Yuri", rating: 70, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
+    { id: '30', name: "Zebrinha", rating: 70, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
     { id: '31', name: "Jesse", rating: 61, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 },
-    { id: '32', name: "Nereu cv", rating: 77, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 }
+    { id: '32', name: "Nereu", rating: 77, position: "Meio-Campo", type: "Convidado", active: false, paid: false, goals: 0, assists: 0, yellowCards: 0, redCard: false, totwWins: 0 }
 ];
 
 // Helper para obter a classe de crachá de nota (Ouro, Prata, Bronze) estilo FIFA
@@ -197,11 +197,11 @@ function initData() {
     const storedHistoryMeta = localStorage.getItem('pelada_history_metadata');
     const storedSavedStatus = localStorage.getItem('pelada_current_draw_saved');
 
-    // Força a atualização para a nova lista se a versão no navegador não for v12 (vitórias TOTW sincronizadas)
-    if (version !== 'v12') {
+    // Força a atualização para a nova lista se a versão no navegador não for v13
+    if (version !== 'v13') {
         state.players = [...mockPlayers];
         savePlayersToStorage();
-        localStorage.setItem('pelada_version', 'v12');
+        localStorage.setItem('pelada_version', 'v13');
         localStorage.removeItem('pelada_teams'); // Limpa sorteios antigos incompatíveis
         state.history = {};
         state.historyMetadata = { totalDraws: 0 };
